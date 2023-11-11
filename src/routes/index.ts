@@ -4,7 +4,7 @@ const Calendar = lazy(() => import('../pages/Calendar'));
 const Chart = lazy(() => import('../pages/Chart'));
 const FormElements = lazy(() => import('../pages/Form/FormElements'));
 const FormLayout = lazy(() => import('../pages/Form/FormLayout'));
-const Profile = lazy(() => import('../pages/Profile'));
+const Create = lazy(() => import('../pages/Create'));
 const Settings = lazy(() => import('../pages/Settings'));
 const Tables = lazy(() => import('../pages/Tables'));
 const Alerts = lazy(() => import('../pages/UiElements/Alerts'));
@@ -17,9 +17,9 @@ const coreRoutes = [
     component: Calendar,
   },
   {
-    path: '/profile',
-    title: 'Profile',
-    component: Profile,
+    path: '/create',
+    title: 'Create',
+    component: Create,
   },
   {
     path: '/forms/form-elements',
