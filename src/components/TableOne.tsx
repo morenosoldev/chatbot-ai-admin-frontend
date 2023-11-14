@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../utils/axiosInstance';
+import { Link } from 'react-router-dom';
 
 interface Chatbot {
   id: string;
@@ -67,9 +68,9 @@ const TableOne: React.FC = () => {
             key={chatbot.id}
             className="grid grid-cols-3 border-b border-stroke dark:border-strokedark sm:grid-cols-5"
           >
-            <div className="flex items-center gap-3 p-2.5 xl:p-5">
+            <div className="flex flex-column items-center gap-3 p-2.5 xl:p-5">
               <div className="flex-shrink-0">
-                <img src={chatbot.logo} alt="Brand" />
+                <img src={chatbot.logo} alt="Brand" width={150} />
               </div>
               <p className="hidden text-black dark:text-white sm:block">
                 {chatbot.name}
@@ -89,9 +90,11 @@ const TableOne: React.FC = () => {
             </div>
 
             <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
-              <button className="flex items-center justify-center px-3 py-1.5 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600">
-                <span>Gå til chatbot</span>
-              </button>
+              <Link to={`/chatbots/${chatbot.id}`}>
+                <button className="flex items-center justify-center px-3 py-1.5 text-sm font-medium text-white bg-black rounded-md hover:bg-blue-600">
+                  <span>Gå til chatbot</span>
+                </button>
+              </Link>
             </div>
           </div>
         ))}

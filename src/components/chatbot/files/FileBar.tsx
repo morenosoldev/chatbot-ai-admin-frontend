@@ -1,16 +1,36 @@
-import axiosInstance from '../utils/axiosInstance';
+import axiosInstance from '../../../utils/axiosInstance';
 
-const FileBar = ({ savedFiles, savedUrls, name }: any) => {
+const FileBar = ({
+  savedFiles,
+  savedUrls,
+  name,
+  message,
+  userId,
+  temperature,
+  rateLimiting,
+  suggestedMessages,
+  logo,
+  userMessageColor,
+  botMessageColor,
+}: any) => {
   const handleSaveButtonClick = () => {
     const formData = new FormData();
-    savedFiles.forEach((file: any, index: any) => {
-      formData.append('savedFiles', file.file);
+    savedFiles.forEach((file: File) => {
+      formData.append('savedFiles', file);
     });
     formData.append('savedUrls', JSON.stringify(savedUrls));
     formData.append('name', name);
+    formData.append('message', message);
+    formData.append('userId', userId);
+    formData.append('temperature', temperature);
+    formData.append('rateLimiting', rateLimiting);
+    formData.append('suggestedMessages', JSON.stringify(suggestedMessages));
+    formData.append('logo', logo);
+    formData.append('userMessageColor', userMessageColor);
+    formData.append('botMessageColor', botMessageColor);
 
     axiosInstance
-      .post('/bot/create', formData)
+      .post('/bot/create', formData, { timeout: 0 })
       .then((response) => {
         console.log(response.data);
       })
@@ -24,12 +44,12 @@ const FileBar = ({ savedFiles, savedUrls, name }: any) => {
       <div className="container mx-auto">
         <h2 className="text-lg font-semibold mb-2 text-white">Saved Files</h2>
         <div className="flex flex-wrap">
-          {savedFiles.map((file: any) => (
+          {savedFiles.map((file: File) => (
             <div
-              key={file.file.name}
+              key={file.name}
               className="bg-blue-500 text-white p-2 m-2 rounded-md"
             >
-              {file.file.name} Type: {file.file.type}
+              {file.name} Type: {file.type}
             </div>
           ))}
         </div>

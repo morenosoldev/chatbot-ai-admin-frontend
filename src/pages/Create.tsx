@@ -1,24 +1,22 @@
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import FileBar from '../components/FileBar';
+import FileBar from '../components/chatbot/files/FileBar';
 import ChatPreview from '../components/ChatPreview';
 import ColorPicker from '../components/chatbot/colors/ColorPicker';
 import ChatbotInfo from '../components/chatbot/info/ChatbotInfo';
-
-type CustomFile = {
-  file: File;
-};
+import FileUploads from '../components/chatbot/files/FileUploads';
+import useImageUploader from '../firebase/uploadImage.js';
 
 const Create = () => {
-  const [selectedFiles, setSelectedFiles] = useState<CustomFile[]>([]);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [url, setUrl] = useState('');
   const [name, setName] = useState('');
-  const [savedFiles, setSavedFiles] = useState<CustomFile[]>([]);
+  const [currentStep, setCurrentStep] = useState(1);
+  const [savedFiles, setSavedFiles] = useState<File[]>([]);
   const [savedUrls, setSavedUrls] = useState<string[]>([]);
   const [message, setMessage] = useState('');
-  const [userId, setUserId] = useState<string>(''); // Assuming user IDs are strings
-  const [logo, setLogo] = useState<File | null>(null);
-
+  const [userId, setUserId] = useState<string>('');
+  const [logo, setLogo] = useState<string | null>(null);
   const [showUserMessagePicker, setShowUserMessagePicker] =
     useState<any>(false);
   const [userMessageColor, setUserMessageColor] = useState<any>('#ABB8C3');
@@ -46,18 +44,22 @@ const Create = () => {
     },
     { message: 'Tak! Det vil jeg prøve.', isBot: false },
     { message: 'Er der andet, jeg kan hjælpe dig med?', isBot: true },
-    // ... Add more messages as needed
   ];
-  const [users, setUsers] = useState<string[]>(['2', '6']); // Assuming user IDs are strings
+  const [users, setUsers] = useState<string[]>(['2', '6']);
   const [messages, setMessages] = useState<any>(sampleMessages);
 
-  const onDrop = (acceptedFiles: File[]) => {
-    const customFiles: CustomFile[] = acceptedFiles.map((file) => ({
-      file,
-    }));
+  const { uploadFile } = useImageUploader();
 
-    console.log('customFiles', customFiles);
-    setSelectedFiles(customFiles);
+  const handleNextStep = () => {
+    setCurrentStep(currentStep + 1);
+  };
+
+  const handlePrevStep = () => {
+    setCurrentStep(currentStep - 1);
+  };
+
+  const onDrop = (acceptedFiles: File[]) => {
+    setSelectedFiles(acceptedFiles);
   };
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -75,99 +77,107 @@ const Create = () => {
     setSelectedFiles([]);
   };
 
-  const handleLogoChange = (acceptedFiles: File[]) => {
-    if (acceptedFiles.length > 0) {
-      setLogo(acceptedFiles[0]);
-    }
+  const handleLogoChange = async (file: File) => {
+    console.log('acceptedFiles', file);
+    const downloadUrl = await uploadFile(file);
+    console.log('downloadUrl', downloadUrl);
+    setLogo(downloadUrl);
   };
 
   return (
-    <div className=" mx-auto p-4">
-      <h1 className="text-2xl font-bold">Opret chatbot</h1>
-
-      <ChatbotInfo
-        name={name}
-        setName={setName}
-        logo={logo}
-        setLogo={setLogo}
-        message={message}
-        setMessage={setMessage}
-        userId={userId}
-        setUserId={setUserId}
-        users={users}
-        getRootProps={getRootProps}
-        getInputProps={getInputProps}
-      />
-
-      <div className="grid gap-x-16 grid-cols-2 mt-8 mb-8">
-        <ColorPicker
-          showUserMessagePicker={showUserMessagePicker}
-          setShowUserMessagePicker={setShowUserMessagePicker}
-          userMessageColor={userMessageColor}
-          setUserMessageColor={setUserMessageColor}
-          showBotMessagePicker={showBotMessagePicker}
-          setShowBotMessagePicker={setShowBotMessagePicker}
-          botMessageColor={botMessageColor}
-          setBotMessageColor={setBotMessageColor}
-          showUserTextColorPicker={showUserTextColorPicker}
-          setShowUserTextColorPicker={setShowUserTextColorPicker}
-          userTextColor={userTextColor}
-          setUserTextColor={setUserTextColor}
-          showBotTextColorPicker={showBotTextColorPicker}
-          setShowBotTextColorPicker={setShowBotTextColorPicker}
-          botTextColor={botTextColor}
-          setBotTextColor={setBotTextColor}
-        />
-        <ChatPreview
+    <div className="mx-auto p-4">
+      {currentStep === 1 && (
+        <ChatbotInfo
+          name={name}
+          setName={setName}
           logo={logo}
-          messages={messages}
-          userMessageColor={userMessageColor}
-          botMessageColor={botMessageColor}
-          userTextColor={userTextColor}
-          botTextColor={botTextColor}
+          setLogo={handleLogoChange}
+          message={message}
+          setMessage={setMessage}
+          userId={userId}
+          setUserId={setUserId}
+          users={users}
+          getRootProps={getRootProps}
+          getInputProps={getInputProps}
         />
-      </div>
-
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold">File Upload</h2>
-        <div
-          {...getRootProps()}
-          className="border-dashed border-2 border-gray-300 p-4"
-        >
-          <input {...getInputProps()} />
-          <p>Drag 'n' drop some files here, or click to select files</p>
-          {selectedFiles.map((customFile) => (
-            <p key={customFile.file.name}>{customFile.file.name}</p>
-          ))}
+      )}
+      {currentStep === 2 && (
+        <div className="grid gap-x-16 grid-cols-2 mt-8 mb-8">
+          <ColorPicker
+            showUserMessagePicker={showUserMessagePicker}
+            setShowUserMessagePicker={setShowUserMessagePicker}
+            userMessageColor={userMessageColor}
+            setUserMessageColor={setUserMessageColor}
+            showBotMessagePicker={showBotMessagePicker}
+            setShowBotMessagePicker={setShowBotMessagePicker}
+            botMessageColor={botMessageColor}
+            setBotMessageColor={setBotMessageColor}
+            showUserTextColorPicker={showUserTextColorPicker}
+            setShowUserTextColorPicker={setShowUserTextColorPicker}
+            userTextColor={userTextColor}
+            setUserTextColor={setUserTextColor}
+            showBotTextColorPicker={showBotTextColorPicker}
+            setShowBotTextColorPicker={setShowBotTextColorPicker}
+            botTextColor={botTextColor}
+            setBotTextColor={setBotTextColor}
+          />
+          <ChatPreview
+            logo={logo}
+            messages={messages}
+            userMessageColor={userMessageColor}
+            botMessageColor={botMessageColor}
+            userTextColor={userTextColor}
+            botTextColor={botTextColor}
+          />
         </div>
-      </div>
-      <div className="mb-4">
-        {selectedFiles.length > 0 && (
+      )}
+      {currentStep === 3 && (
+        <div className=" mx-auto p-4">
+          <FileUploads
+            getRootProps={getRootProps}
+            getInputProps={getInputProps}
+            selectedFiles={selectedFiles}
+            handleSaveFile={handleSaveFile}
+            url={url}
+            setUrl={setUrl}
+            handleUrlSubmit={handleUrlSubmit}
+          />
+          <FileBar
+            savedFiles={savedFiles}
+            savedUrls={savedUrls}
+            name={name}
+            message={message}
+            userId={userId}
+            temperature={0}
+            rateLimiting={100}
+            suggestedMessages={['Hvad er Spacebox?', 'Hvor er min pakke?']}
+            logo={logo}
+            userMessageColor={userMessageColor}
+            botMessageColor={botMessageColor}
+          />
+        </div>
+      )}
+
+      <div className="mt-4">
+        {currentStep > 1 && (
           <button
-            onClick={handleSaveFile}
-            className="bg-black text-white p-2 mt-2 rounded-md hover:bg-blue-600"
+            onClick={handlePrevStep}
+            className="bg-black text-white p-2 rounded-md mr-2"
           >
-            Save File
+            Tilbage
           </button>
         )}
+        {currentStep < 3 ? (
+          <button
+            onClick={handleNextStep}
+            className="bg-black text-white p-2 rounded-md"
+          >
+            Næste
+          </button>
+        ) : (
+          <button className="bg-black text-white p-2 rounded-md">Opret</button>
+        )}
       </div>
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold">URL</h2>
-        <input
-          type="text"
-          placeholder="Enter a URL"
-          className="border border-gray-300 p-2 w-full mb-2"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-        />
-        <button
-          onClick={handleUrlSubmit}
-          className="bg-black text-white p-2 mt-2 rounded-md hover-bg-blue-600"
-        >
-          Submit URL
-        </button>
-      </div>
-      <FileBar savedFiles={savedFiles} savedUrls={savedUrls} name={name} />
     </div>
   );
 };

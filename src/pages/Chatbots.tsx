@@ -1,7 +1,7 @@
 import Breadcrumb from '../components/Breadcrumb';
 import TableOne from '../components/TableOne';
 
-const Calendar = () => {
+const Chatbots = () => {
   return (
     <>
       <Breadcrumb pageName="Chatbots" />
@@ -10,4 +10,4 @@ const Calendar = () => {
   );
 };
 
-export default Calendar;
+export default Chatbots;

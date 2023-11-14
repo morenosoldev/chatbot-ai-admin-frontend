@@ -1,3 +1,4 @@
+import React from 'react';
 import chatbotai from '../images/logo/ChatbotAI-light.png';
 
 type Message = {
@@ -5,14 +6,23 @@ type Message = {
   isBot: boolean;
 };
 
-export default function ChatPreview({
+type ChatPreviewProps = {
+  logo: string | null;
+  messages: Message[];
+  userMessageColor: string;
+  botMessageColor: string;
+  userTextColor: string;
+  botTextColor: string;
+};
+
+const ChatPreview: React.FC<ChatPreviewProps> = ({
   logo,
   messages,
   userMessageColor,
   botMessageColor,
   userTextColor,
   botTextColor,
-}) {
+}: ChatPreviewProps) => {
   return (
     <div id="chat-container" className="bg-white border">
       <div className="flex items-center justify-between rounded-t-lg  border-b  p-4 text-white">
@@ -43,9 +53,9 @@ export default function ChatPreview({
             stroke="currentColor"
           >
             <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
               d="M6 18L18 6M6 6l12 12"
             ></path>
           </svg>
@@ -54,7 +64,7 @@ export default function ChatPreview({
       <div id="chatbox" className="h-80 overflow-y-auto p-4">
         {messages.map((message: Message) =>
           message.isBot ? (
-            <div className="mb-2">
+            <div key={message.message} className="mb-2">
               <p
                 style={{
                   backgroundColor: userMessageColor,
@@ -66,7 +76,7 @@ export default function ChatPreview({
               </p>
             </div>
           ) : (
-            <div className="mb-2 text-right">
+            <div key={message.message} className="mb-2 text-right">
               <p
                 style={{
                   backgroundColor: botMessageColor,
@@ -96,4 +106,6 @@ export default function ChatPreview({
       </div>
     </div>
   );
-}
+};
+
+export default ChatPreview;

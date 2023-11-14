@@ -70,7 +70,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
   };
 
   return (
-    <div className="colors gap-y-0 grid grid-cols-2">
+    <div className="colors gap-y-0 grid grid-cols-2 h-[200px]">
       <div className="mb-4">
         <h2 className="text-lg font-semibold">Bruger besked baggrund</h2>
         <div>
