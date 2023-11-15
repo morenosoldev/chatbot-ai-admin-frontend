@@ -22,6 +22,7 @@ const Create = () => {
   const [userMessageColor, setUserMessageColor] = useState<any>('#ABB8C3');
   const [botMessageColor, setBotMessageColor] = useState<any>('#000000');
   const [showBotMessagePicker, setShowBotMessagePicker] = useState<any>(false);
+  const [suggestedMessages, setSuggestedMessages] = useState<any>([]);
   const [showUserTextColorPicker, setShowUserTextColorPicker] =
     useState<any>(false);
   const [showBotTextColorPicker, setShowBotTextColorPicker] =
@@ -46,7 +47,7 @@ const Create = () => {
     { message: 'Er der andet, jeg kan hjælpe dig med?', isBot: true },
   ];
   const [users, setUsers] = useState<string[]>(['2', '6']);
-  const [messages, setMessages] = useState<any>(sampleMessages);
+  const [messages] = useState<any>(sampleMessages);
 
   const { uploadFile } = useImageUploader();
 
@@ -78,7 +79,6 @@ const Create = () => {
   };
 
   const handleLogoChange = async (file: File) => {
-    console.log('acceptedFiles', file);
     const downloadUrl = await uploadFile(file);
     console.log('downloadUrl', downloadUrl);
     setLogo(downloadUrl);
@@ -96,6 +96,8 @@ const Create = () => {
           setMessage={setMessage}
           userId={userId}
           setUserId={setUserId}
+          suggestedMessages={suggestedMessages}
+          setSuggestedMessages={setSuggestedMessages}
           users={users}
           getRootProps={getRootProps}
           getInputProps={getInputProps}
@@ -150,10 +152,12 @@ const Create = () => {
             userId={userId}
             temperature={0}
             rateLimiting={100}
-            suggestedMessages={['Hvad er Spacebox?', 'Hvor er min pakke?']}
+            suggestedMessages={suggestedMessages}
             logo={logo}
             userMessageColor={userMessageColor}
             botMessageColor={botMessageColor}
+            botTextColor={botTextColor}
+            userTextColor={userTextColor}
           />
         </div>
       )}

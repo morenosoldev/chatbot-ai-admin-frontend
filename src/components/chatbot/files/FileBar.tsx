@@ -12,6 +12,8 @@ const FileBar = ({
   logo,
   userMessageColor,
   botMessageColor,
+  botTextColor,
+  userTextColor,
 }: any) => {
   const handleSaveButtonClick = () => {
     const formData = new FormData();
@@ -28,6 +30,8 @@ const FileBar = ({
     formData.append('logo', logo);
     formData.append('userMessageColor', userMessageColor);
     formData.append('botMessageColor', botMessageColor);
+    formData.append('botTextColor', botTextColor);
+    formData.append('userTextColor', userTextColor);
 
     axiosInstance
       .post('/bot/create', formData, { timeout: 0 })
