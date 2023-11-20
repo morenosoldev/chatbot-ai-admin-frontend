@@ -7,7 +7,7 @@ const FormElements = lazy(() => import('../pages/Form/FormElements'));
 const FormLayout = lazy(() => import('../pages/Form/FormLayout'));
 const Create = lazy(() => import('../pages/Create'));
 const Settings = lazy(() => import('../pages/Settings'));
-const Tables = lazy(() => import('../pages/Tables'));
+const Brugere = lazy(() => import('../pages/Brugere'));
 const Alerts = lazy(() => import('../pages/UiElements/Alerts'));
 const Buttons = lazy(() => import('../pages/UiElements/Buttons'));
 
@@ -38,9 +38,9 @@ const coreRoutes = [
     component: FormLayout,
   },
   {
-    path: '/tables',
-    title: 'Tables',
-    component: Tables,
+    path: '/brugere',
+    title: 'Brugere',
+    component: Brugere,
   },
   {
     path: '/settings',
