@@ -37,35 +37,63 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
       .catch((error) => console.error('Error fetching data:', error));
   }, [id]);
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (!userInput.trim()) return;
     setLoading(true);
 
     const userMessage: Message = { isBot: false, message: userInput };
     setMessages([...messages, userMessage]); // Add user's message to the chat interface
 
-    axiosInstance
-      .post(
-        `/bot/chat/${id}`,
-        {
-          input: userInput,
-          previousMessages: [...messages, userMessage], // Send all previous messages including the new user message
-          company: 'Spacebox',
+    let isFirstMessageAdded = false;
+
+    try {
+      const response = await fetch(`http://localhost:8000/bot/chat/${id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-        { timeout: 0 },
-      )
-      .then((response) => {
-        const botResponse = response.data.data.chatResponse;
-        const botMessage: Message = { isBot: true, message: botResponse };
-        setMessages([...messages, userMessage, botMessage]); // Add bot's response to the chat interface
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error sending message:', error);
-        setLoading(false);
+        body: JSON.stringify({
+          input: userInput,
+          previousMessages: [...messages, userMessage],
+          company: 'Spacebox',
+        }),
       });
 
-    setUserInput('');
+      if (!response.ok || !response.body) {
+        throw new Error(response.statusText);
+      }
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let currentMessages = [...messages, userMessage];
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) {
+          break;
+        }
+        const decodedChunk = decoder.decode(value, { stream: true });
+        console.log('Decoded chunk:', decodedChunk);
+        setLoading(false);
+        if (!isFirstMessageAdded) {
+          currentMessages.push({ isBot: true, message: decodedChunk });
+          isFirstMessageAdded = true;
+        } else {
+          currentMessages[currentMessages.length - 1] = {
+            ...currentMessages[currentMessages.length - 1],
+            message:
+              currentMessages[currentMessages.length - 1].message +
+              decodedChunk,
+          };
+        }
+
+        setMessages(currentMessages);
+      }
+      setUserInput('');
+    } catch (error) {
+      console.error('Error sending message:', error);
+      setLoading(false);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {

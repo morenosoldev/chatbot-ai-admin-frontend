@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import FileBar from '../components/chatbot/files/FileBar';
 import ChatPreview from '../components/ChatPreview';
@@ -6,6 +6,7 @@ import ColorPicker from '../components/chatbot/colors/ColorPicker';
 import ChatbotInfo from '../components/chatbot/info/ChatbotInfo';
 import FileUploads from '../components/chatbot/files/FileUploads';
 import useImageUploader from '../firebase/uploadImage.js';
+import instance from '../axios/instance.js';
 
 const Create = () => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -80,12 +81,28 @@ const Create = () => {
 
   const handleLogoChange = async (file: File) => {
     const downloadUrl = await uploadFile(file);
-    console.log('downloadUrl', downloadUrl);
     setLogo(downloadUrl);
   };
 
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await instance.get('/users');
+        if (response.data.data.length > 0) {
+          setUsers(response.data.data); // Assuming the response contains an array of user objects
+        } else {
+          setUsers([]);
+        }
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
   return (
-    <div className="mx-auto p-4">
+    <div className="mx-auto rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark p-4">
       {currentStep === 1 && (
         <ChatbotInfo
           name={name}

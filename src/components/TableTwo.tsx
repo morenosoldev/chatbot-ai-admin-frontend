@@ -1,5 +1,6 @@
 import instance from '../axios/instance';
 import { useEffect, useState } from 'react';
+import moment from 'moment';
 
 const TableTwo = () => {
   const [users, setUsers] = useState([]);
@@ -8,8 +9,8 @@ const TableTwo = () => {
     const fetchUsers = async () => {
       try {
         const response = await instance.get('/users');
-        if (response.data.length > 0) {
-          setUsers(response.data); // Assuming the response contains an array of user objects
+        if (response.data.data.length > 0) {
+          setUsers(response.data.data); // Assuming the response contains an array of user objects
         } else {
           setUsers([]);
         }
@@ -30,11 +31,20 @@ const TableTwo = () => {
       </div>
 
       <div className="grid grid-cols-6 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
-        <div className="col-span-3 flex items-center">
+        <div className="col-span-2 flex items-center">
+          <p className="font-medium">ID</p>
+        </div>
+        <div className="col-span-1 flex items-center">
           <p className="font-medium">Virksomhedsnavn</p>
         </div>
-        <div className="col-span-2 hidden items-center sm:flex">
+        <div className="col-span-1 hidden items-center sm:flex">
           <p className="font-medium">Email</p>
+        </div>
+        <div className="col-span-2 hidden items-center sm:flex">
+          <p className="font-medium">Oprettelses dato</p>
+        </div>
+        <div className="col-span-2 hidden items-center sm:flex">
+          <p className="font-medium">Reset password</p>
         </div>
       </div>
 
@@ -49,7 +59,13 @@ const TableTwo = () => {
             key={index}
             className="grid grid-cols-6 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5"
           >
-            <div className="col-span-3 flex items-center">
+            <div className="col-span-2 flex items-center">
+              {/* User data rendering */}
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                <p className="text-sm text-black dark:text-white">{user._id}</p>
+              </div>
+            </div>
+            <div className="col-span-1 flex items-center">
               {/* User data rendering */}
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
                 <p className="text-sm text-black dark:text-white">
@@ -57,11 +73,25 @@ const TableTwo = () => {
                 </p>
               </div>
             </div>
-            <div className="col-span-2 hidden items-center sm:flex">
+            <div className="col-span-1 hidden items-center sm:flex">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
                 <p className="text-sm text-black dark:text-white">
                   {user.email}
                 </p>
+              </div>
+            </div>
+            <div className="col-span-2 hidden items-center sm:flex">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                <p className="text-sm text-black dark:text-white">
+                  {moment(user.createdAt).format('DD MMMM YYYY')}
+                </p>
+              </div>
+            </div>
+            <div className="col-span-2 hidden items-center sm:flex">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                <button className="bg-black p-2 rounded text-white dark:text-white">
+                  Reset password
+                </button>
               </div>
             </div>
           </div>

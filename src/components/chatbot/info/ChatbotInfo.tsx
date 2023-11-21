@@ -1,5 +1,12 @@
 import React, { ChangeEvent, useState, ReactElement } from 'react';
 
+type User = {
+  _id: string;
+  name: string;
+  createdAt: string;
+  email: string;
+};
+
 interface ChatbotInfoProps {
   name: string;
   setName: (value: string) => void;
@@ -13,7 +20,7 @@ interface ChatbotInfoProps {
   setSuggestedMessages: (value: string[]) => void;
   getRootProps: () => Record<string, any>;
   getInputProps: () => Record<string, any>;
-  users: string[];
+  users: User[];
 }
 
 const ChatbotInfo: React.FC<ChatbotInfoProps> = ({
@@ -111,9 +118,9 @@ const ChatbotInfo: React.FC<ChatbotInfoProps> = ({
           value={userId}
           onChange={handleUserIdChange}
         >
-          {users.map((id) => (
-            <option key={id} value={id}>
-              {id}
+          {users.map((user) => (
+            <option key={user._id} value={user._id}>
+              {user.name}
             </option>
           ))}
         </select>
