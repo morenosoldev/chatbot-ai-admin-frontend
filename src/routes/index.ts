@@ -1,4 +1,5 @@
 import { lazy } from 'react';
+import CreateAutomatisering from '../pages/CreateAutomatisering';
 
 const Chatbots = lazy(() => import('../pages/Chatbots'));
 const Chatbot = lazy(() => import('../pages/Chatbot'));
@@ -10,6 +11,7 @@ const Settings = lazy(() => import('../pages/Settings'));
 const Brugere = lazy(() => import('../pages/Brugere'));
 const Alerts = lazy(() => import('../pages/UiElements/Alerts'));
 const Buttons = lazy(() => import('../pages/UiElements/Buttons'));
+const Automatiseringer = lazy(() => import('../pages/Automatiseringer'));
 
 const coreRoutes = [
   {
@@ -26,6 +28,16 @@ const coreRoutes = [
     path: '/create',
     title: 'Create',
     component: Create,
+  },
+  {
+    path: '/automatiseringer',
+    title: 'Automatiseringer',
+    component: Automatiseringer,
+  },
+  {
+    path: '/automatiseringer/:id',
+    title: 'Opret automatiseringer',
+    component: CreateAutomatisering,
   },
   {
     path: '/forms/form-elements',

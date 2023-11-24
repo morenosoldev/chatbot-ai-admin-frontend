@@ -12,6 +12,7 @@ interface Chatbot {
   messages: Message[];
   userMessageColor: string;
   userTextColor: string;
+  suggestedMessages: string[];
   botMessageColor: string;
   botTextColor: string;
 }
@@ -19,7 +20,6 @@ interface Chatbot {
 interface ChatbotDemoProps {
   id: string;
 }
-// ... (previous imports and code)
 
 const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
   const [chatbot, setChatbot] = useState<Chatbot | null>(null);
@@ -42,11 +42,13 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
     setLoading(true);
 
     const userMessage: Message = { isBot: false, message: userInput };
-    setMessages([...messages, userMessage]); // Add user's message to the chat interface
-
-    let isFirstMessageAdded = false;
+    setMessages((prevMessages) => [...prevMessages, userMessage]);
 
     try {
+      let currentMessages = [...messages, userMessage];
+      currentMessages.push({ isBot: true, message: '' });
+      setMessages(currentMessages);
+
       const response = await fetch(`http://localhost:8000/bot/chat/${id}`, {
         method: 'POST',
         headers: {
@@ -65,7 +67,6 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
-      let currentMessages = [...messages, userMessage];
 
       while (true) {
         const { value, done } = await reader.read();
@@ -74,21 +75,77 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
         }
         const decodedChunk = decoder.decode(value, { stream: true });
         console.log('Decoded chunk:', decodedChunk);
-        setLoading(false);
-        if (!isFirstMessageAdded) {
-          currentMessages.push({ isBot: true, message: decodedChunk });
-          isFirstMessageAdded = true;
-        } else {
-          currentMessages[currentMessages.length - 1] = {
-            ...currentMessages[currentMessages.length - 1],
-            message:
-              currentMessages[currentMessages.length - 1].message +
-              decodedChunk,
-          };
-        }
 
-        setMessages(currentMessages);
+        currentMessages[currentMessages.length - 1] = {
+          ...currentMessages[currentMessages.length - 1],
+          message:
+            currentMessages[currentMessages.length - 1].message + decodedChunk,
+        };
+
+        setMessages([...currentMessages]); // Ensure immediate state update
       }
+
+      setLoading(false);
+      setUserInput('');
+    } catch (error) {
+      console.error('Error sending message:', error);
+      setLoading(false);
+    }
+  };
+
+  const handleSuggestedMessageClick = async (suggestedMessage: string) => {
+    setLoading(true);
+
+    const userMessage: Message = { isBot: false, message: suggestedMessage };
+
+    setMessages((prevMessages) => [...prevMessages, userMessage]); // Add user's message to the chat interface
+
+    try {
+      let currentMessages = [...messages, userMessage];
+      currentMessages.push({ isBot: true, message: '' });
+
+      setMessages(currentMessages);
+
+      const response = await fetch(`http://localhost:8000/bot/chat/${id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          input: userInput,
+          previousMessages: [...messages, userMessage],
+          company: 'Spacebox',
+        }),
+      });
+
+      if (!response.ok || !response.body) {
+        throw new Error(response.statusText);
+      }
+
+      let responseMessages = [...messages, userMessage];
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) {
+          break;
+        }
+        const decodedChunk = decoder.decode(value, { stream: true });
+        console.log('Decoded chunk:', decodedChunk);
+
+        responseMessages[responseMessages.length - 1] = {
+          ...responseMessages[responseMessages.length - 1],
+          message:
+            responseMessages[responseMessages.length - 1].message +
+            decodedChunk,
+        };
+
+        setMessages([...responseMessages]); // Ensure immediate state update
+      }
+
+      setLoading(false);
       setUserInput('');
     } catch (error) {
       console.error('Error sending message:', error);
@@ -106,7 +163,17 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
     <div>
       {chatbot && (
         <div id="chat-container" className="bg-white border">
-          {/* ... (existing code) */}
+          <div className="flex items-center border-b p-4">
+            {chatbot.logo && (
+              <img
+                src={chatbot.logo}
+                alt="Chatbot logo"
+                className="max-w-md max-h-8 rounded-full mr-4"
+              />
+            )}
+            <p className="font-semibold text-lg">{chatbot.chatbotai}</p>
+          </div>
+
           <div id="chatbox" className="h-[70vh] overflow-y-auto p-4">
             {messages.map((message: Message, index: number) => (
               <div key={index} className={message.isBot ? 'mb-2' : 'mb-2 flex'}>
@@ -118,29 +185,35 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
                     color: message.isBot
                       ? chatbot.botTextColor
                       : chatbot.userTextColor,
+                    display: 'inline-block',
+                    width: 'fit-content',
                   }}
-                  className={`inline-block whitespace-pre-line rounded-lg ${
+                  className={`whitespace-pre-line rounded-lg ${
                     message.isBot
-                      ? 'bg-gray-200 px-4 py-2 text-left text-black'
+                      ? 'bg-gray-200 px-4 flex items-center py-2 text-left text-black'
                       : 'px-4 py-2 ml-auto text-white'
                   }`}
                 >
                   {message.message}
+                  {loading &&
+                    index === messages.length - 1 &&
+                    messages[messages.length - 1].isBot && (
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900 ml-4"></div>
+                    )}
                 </p>
               </div>
             ))}
-            {loading && (
-              <div
-                style={{
-                  backgroundColor: chatbot.botMessageColor,
-                  color: chatbot.botTextColor,
-                }}
-                className="flex w-28 rounded px-4 py-2 text-left items-center"
+          </div>
+          <div>
+            {chatbot.suggestedMessages.map((suggestedMessage, index) => (
+              <button
+                key={index}
+                className="border rounded p-2 m-2 transition duration-300 hover:bg-blue hover:text-white"
+                onClick={() => handleSuggestedMessageClick(suggestedMessage)}
               >
-                <span>Tænker...</span>
-                <div className="animate-spin rounded-full text-left h-4 w-4 border-b-2 border-gray-900 ml-2"></div>
-              </div>
-            )}
+                {suggestedMessage}
+              </button>
+            ))}
           </div>
           <div className="flex border-t p-4">
             <input
