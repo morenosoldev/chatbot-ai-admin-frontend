@@ -69,7 +69,7 @@ const ChatbotInfo: React.FC<ChatbotInfoProps> = ({
   return (
     <div>
       <div className="mb-4">
-        <h2 className="text-lg font-semibold">Chatbot navn</h2>
+        <h2 className="text-lg font-semibold mb-2">Chatbot navn</h2>
         <input
           type="text"
           placeholder="Chatbot navn"
@@ -80,7 +80,7 @@ const ChatbotInfo: React.FC<ChatbotInfoProps> = ({
       </div>
 
       <div className="mb-4">
-        <h2 className="text-lg font-semibold">Standard besked</h2>
+        <h2 className="text-lg font-semibold mb-2">Standard besked</h2>
         <input
           type="text"
           placeholder="Enter a message"
@@ -91,8 +91,8 @@ const ChatbotInfo: React.FC<ChatbotInfoProps> = ({
       </div>
 
       <div className="mb-4">
-        <h2 className="text-lg font-semibold">Foreslåede beskeder</h2>
-        <div className="flex flex-wrap mb-4 gap-2">
+        <h2 className="text-lg font-semibold mb-2">Foreslåede beskeder</h2>
+        <div className="flex flex-wrap mb-2 gap-2">
           {suggestedMessages.map((message, index) => (
             <span
               key={index}
@@ -104,7 +104,7 @@ const ChatbotInfo: React.FC<ChatbotInfoProps> = ({
         </div>
         <input
           type="text"
-          placeholder="Type messages separated by commas"
+          placeholder="Skriv foreslåede beskeder sepereret med kommaer"
           className="border border-gray-300 p-2 w-full mb-2"
           value={inputValue}
           onChange={handleSuggestedMessagesChange}
@@ -112,7 +112,7 @@ const ChatbotInfo: React.FC<ChatbotInfoProps> = ({
       </div>
 
       <div className="mb-4">
-        <h2 className="text-lg font-semibold">Bruger ID</h2>
+        <h2 className="text-lg font-semibold mb-2">Bruger ID</h2>
         <select
           className="border border-gray-300 p-2 w-full mb-2"
           value={userId}
@@ -126,7 +126,7 @@ const ChatbotInfo: React.FC<ChatbotInfoProps> = ({
         </select>
       </div>
       <div className="mb-4">
-        <h2 className="text-lg font-semibold">Logo</h2>
+        <h2 className="text-lg font-semibold mb-2">Logo</h2>
         <input type="file" onChange={handleLogoChange} />
         {logo && <p>{logo}</p>}
       </div>

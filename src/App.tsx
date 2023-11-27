@@ -1,7 +1,6 @@
-import { Suspense, lazy, useEffect, useState } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { useEffect, useState, Suspense, lazy } from 'react';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-
 import ECommerce from './pages/Dashboard/ECommerce';
 import SignIn from './pages/Authentication/SignIn';
 import SignUp from './pages/Authentication/SignUp';
@@ -12,14 +11,26 @@ const DefaultLayout = lazy(() => import('./layout/DefaultLayout'));
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   useEffect(() => {
-    setTimeout(() => setLoading(false), 1000);
+    const token: string | null = localStorage.getItem('authToken');
+
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+
+    // Update loading state after initial checks
+    setLoading(false);
   }, []);
 
-  return loading ? (
-    <Loader />
-  ) : (
+  if (loading) {
+    return <Loader />;
+  }
+
+  return (
     <>
       <Toaster
         position="top-right"
@@ -29,10 +40,14 @@ function App() {
       <Routes>
         <Route path="/auth/signin" element={<SignIn />} />
         <Route path="/auth/signup" element={<SignUp />} />
-        <Route element={<DefaultLayout />}>
+        <Route
+          element={
+            isLoggedIn ? <DefaultLayout /> : <Navigate to="/auth/signin" />
+          }
+        >
           <Route index element={<ECommerce />} />
-          {routes.map((routes, index) => {
-            const { path, component: Component } = routes;
+          {routes.map((route, index) => {
+            const { path, component: Component } = route;
             return (
               <Route
                 key={index}

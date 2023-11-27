@@ -97,13 +97,11 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
     setLoading(true);
 
     const userMessage: Message = { isBot: false, message: suggestedMessage };
-
     setMessages((prevMessages) => [...prevMessages, userMessage]); // Add user's message to the chat interface
 
     try {
       let currentMessages = [...messages, userMessage];
       currentMessages.push({ isBot: true, message: '' });
-
       setMessages(currentMessages);
 
       const response = await fetch(`http://localhost:8000/bot/chat/${id}`, {
@@ -112,8 +110,8 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          input: userInput,
-          previousMessages: [...messages, userMessage],
+          input: suggestedMessage,
+          previousMessages: currentMessages, // Use currentMessages here
           company: 'Spacebox',
         }),
       });
@@ -122,7 +120,7 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
         throw new Error(response.statusText);
       }
 
-      let responseMessages = [...messages, userMessage];
+      let responseMessages = [...currentMessages]; // Use currentMessages for initialization
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
@@ -133,7 +131,6 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
           break;
         }
         const decodedChunk = decoder.decode(value, { stream: true });
-        console.log('Decoded chunk:', decodedChunk);
 
         responseMessages[responseMessages.length - 1] = {
           ...responseMessages[responseMessages.length - 1],
