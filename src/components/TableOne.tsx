@@ -91,7 +91,7 @@ const TableOne: React.FC = () => {
             </div>
 
             <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
-              <Link to={`/chatbots/${chatbot.id}`}>
+              <Link to={`/chatbots/${chatbot._id}`}>
                 <button className="flex items-center justify-center px-3 py-1.5 text-sm font-medium text-white bg-black rounded-md hover:bg-blue-600">
                   <span>Gå til chatbot</span>
                 </button>

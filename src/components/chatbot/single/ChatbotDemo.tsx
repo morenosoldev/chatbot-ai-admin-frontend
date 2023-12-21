@@ -7,6 +7,7 @@ interface Message {
 }
 
 interface Chatbot {
+  _id: string;
   logo?: string;
   chatbotai?: string;
   messages: Message[];
@@ -26,6 +27,7 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
   const [userInput, setUserInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [conversationId, setConversationId] = useState<string | null>();
 
   useEffect(() => {
     axiosInstance
@@ -38,11 +40,15 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
   }, [id]);
 
   const sendMessage = async () => {
-    if (!userInput.trim()) return;
+    if (!userInput.trim() || !chatbot) return;
     setLoading(true);
+    const currentConversationId =
+    conversationId || (await fetchConversationId(chatbot._id));
+
 
     const userMessage: Message = { isBot: false, message: userInput };
     setMessages((prevMessages) => [...prevMessages, userMessage]);
+    setUserInput('');
 
     try {
       let currentMessages = [...messages, userMessage];
@@ -58,6 +64,7 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
           input: userInput,
           previousMessages: [...messages, userMessage],
           company: 'Spacebox',
+          conversationId: currentConversationId,
         }),
       });
 
@@ -74,7 +81,6 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
           break;
         }
         const decodedChunk = decoder.decode(value, { stream: true });
-        console.log('Decoded chunk:', decodedChunk);
 
         currentMessages[currentMessages.length - 1] = {
           ...currentMessages[currentMessages.length - 1],
@@ -86,7 +92,6 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
       }
 
       setLoading(false);
-      setUserInput('');
     } catch (error) {
       console.error('Error sending message:', error);
       setLoading(false);
@@ -94,10 +99,14 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
   };
 
   const handleSuggestedMessageClick = async (suggestedMessage: string) => {
+    if(!chatbot) return;
     setLoading(true);
+    const currentConversationId =
+      conversationId || (await fetchConversationId(chatbot._id));
 
     const userMessage: Message = { isBot: false, message: suggestedMessage };
     setMessages((prevMessages) => [...prevMessages, userMessage]); // Add user's message to the chat interface
+    setUserInput('');
 
     try {
       let currentMessages = [...messages, userMessage];
@@ -113,6 +122,7 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
           input: suggestedMessage,
           previousMessages: currentMessages, // Use currentMessages here
           company: 'Spacebox',
+          conversationId: currentConversationId,
         }),
       });
 
@@ -143,12 +153,27 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
       }
 
       setLoading(false);
-      setUserInput('');
     } catch (error) {
       console.error('Error sending message:', error);
       setLoading(false);
     }
   };
+
+  async function fetchConversationId(chatbotId: string) {
+    try {
+      // Use the Axios instance to send a POST request
+      const response = await axiosInstance.post(`/bot/conversation/${chatbotId}`);
+  
+      const data = response.data;
+      console.log("data.conversationId", data.conversationId);
+      setConversationId(data.conversationId); // Store the retrieved conversation ID
+      return data.conversationId; // Return the retrieved conversation ID
+    } catch (error) {
+      console.error("Error fetching conversation ID:", error);
+      return null; // Return null in case of an error
+    }
+  }
+
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
