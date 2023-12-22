@@ -5,12 +5,15 @@ import { useState } from 'react';
 import instance from '../../axios/instance';
 import { AxiosResponse } from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { login } from '../../store/authSlice';
+import { useDispatch } from 'react-redux';
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -31,8 +34,12 @@ const SignIn = () => {
       );
 
       if (response.status === 200) {
-        console.log('Logged in successfully', response.data.data);
-        localStorage.setItem('authToken', response.data.data.accessToken);
+        dispatch(
+          login({
+            authToken: response.data.data.accessToken,
+            user: response.data.data.user,
+          }),
+        );
         navigate('/');
       } else {
         console.error('Failed to log in');
