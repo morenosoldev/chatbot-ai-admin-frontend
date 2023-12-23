@@ -15,7 +15,6 @@
     "url": "https://tailadmin.com"
   },
   "dependencies": {
-    "@testing-library/jest-dom": "^6.1.5",
     "@testing-library/react": "^14.1.2",
     "apexcharts": "^3.41.0",
     "axios": "^1.6.2",
@@ -40,6 +39,7 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.1.5",
     "@types/jest": "^29.5.11",
     "@types/react": "^18.2.17",
     "@types/react-dom": "^18.2.7",
