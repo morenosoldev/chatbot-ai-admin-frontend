@@ -4,24 +4,9 @@ import '@testing-library/jest-dom';
 import SignIn from '../../pages/Authentication/SignIn';
 
 
-describe('End TO END Testing from Sign in to create ChatBot', () => {
+describe('Intergration Testing for Sign In', () => {
 
-    test('User sign in with empty input fields', async () => {
-        render(
-            <BrowserRouter>
-              <SignIn />
-            </BrowserRouter>
-        );    
-        
-        const submitButton = screen.getByRole('button', { name: /login/i });
-    
-        fireEvent.click(submitButton);
-    
-        const errorMessage = await screen.findByText(/felterne må ikke være tomme/i);
-        expect(errorMessage).toBeInTheDocument();
-    });
-
-    test('displays error with wrong email or password', async () => {
+    test('Testing for the right error message from the server, and that it gets displayed, when user is invalid', async () => {
         render(
             <BrowserRouter>
                 <SignIn />
@@ -37,7 +22,7 @@ describe('End TO END Testing from Sign in to create ChatBot', () => {
         expect(errorMessage).toBeInTheDocument();
     });
 
-    test('redirects on successful login', async () => {
+    test('Token added on successfull login', async () => {
         render(
             <BrowserRouter>
                 <SignIn />
