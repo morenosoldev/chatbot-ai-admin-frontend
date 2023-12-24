@@ -13,12 +13,18 @@ const SignIn = () => {
   const [password, setPassword] = useState('');
   const [isLoading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [error, setError] = useState('');
   const dispatch = useDispatch();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+        e.preventDefault();
     setLoading(true);
 
+    if (!email || !password) {
+      setError('Felterne må ikke være tomme.');
+      setLoading(false);
+      return;
+    }
     try {
       const response: AxiosResponse = await instance.post(
         '/auth/sign-in',
@@ -45,7 +51,7 @@ const SignIn = () => {
         console.error('Failed to log in');
       }
     } catch (error: any) {
-      console.error('Error occurred:', error.message);
+      setError(error.response?.data?.message || 'An error occurred.');
     } finally {
       setLoading(false);
     }
@@ -266,6 +272,7 @@ const SignIn = () => {
                         </g>
                       </svg>
                     </span>
+                    {error && <div className='text-red'>{error}</div>}
                   </div>
                 </div>
 
