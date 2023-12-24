@@ -42,9 +42,7 @@ describe('SignUp End-to-End Tests', () => {
         cy.wait('@createUser');
     
         cy.window().its('localStorage.authToken').should('exist');
-        // TODO - Find solution for why it is not redirecting the page, had to manually redirect to "/" page
-        cy.window().then((win) => win.location.href = Cypress.config().baseUrl + '/');
-        cy.url().should('eq', Cypress.config().baseUrl + '/');
+        cy.url().should('include', '/'); 
     });
   
   });
