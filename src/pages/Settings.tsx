@@ -1,8 +1,13 @@
-import { useEffect, useState } from 'react';
+import React, {
+  MouseEvent,
+  ChangeEvent,
+  FormEvent,
+  useEffect,
+  useState,
+} from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import Breadcrumb from '../components/Breadcrumb';
-import userThree from '../images/user/user-03.png';
 import instance from '../axios/instance';
 import toast from 'react-hot-toast';
 
@@ -10,6 +15,7 @@ interface UserData {
   name: string;
   phone: string;
   email: string;
+  avatar?: string; // Assuming avatar URL is part of the user data
 }
 
 const Settings = () => {
@@ -19,20 +25,65 @@ const Settings = () => {
     phone: '',
     email: '',
   }); // Initialized with empty strings
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const defaultAvatar =
+    "'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'";
+  const [avatar, setAvatar] = useState(defaultAvatar); // Default avatar state
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    if (event.target.files && event.target.files[0]) {
+      setSelectedFile(event.target.files[0]);
+    }
+  };
+
+  const handleSave = async (
+    e: MouseEvent<HTMLButtonElement> | FormEvent<HTMLFormElement>,
+  ) => {
+    e.preventDefault();
+    if (selectedFile) {
+      try {
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+
+        // Upload the image
+        const uploadResponse = await instance.post(
+          '/media/image/upload',
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          },
+        );
+        // Get the image ID from the response
+        const imageId = uploadResponse.data.data.id;
+
+        // Update user avatar with the image ID
+        const imageResponse = await instance.post('/user/update/avatar', {
+          imageId: imageId,
+        });
+
+        setAvatar(imageResponse.data.data.image); // Update avatar with the new image URL
+        showToast('Success', 'Dit billede er blevet opdateret!', 'success');
+
+        // Handle success (e.g., show a success message)
+      } catch (error) {
+        console.error('Error:', error);
+        // Handle error (e.g., show an error message)
+      }
+    }
+  };
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         console.log('Fetching user data', userId);
         const response = await instance.get(`/me`);
         console.log('response', response.data.data);
-        setUserData(
-          (prevUserData) =>
-            ({
-              name: response.data.data.name,
-              phone: response.data.data.phone,
-              email: response.data.data.email,
-            }) as UserData,
-        );
+        const fetchedUserData = response.data.data as UserData;
+        setUserData(fetchedUserData);
+        setAvatar(fetchedUserData.avatar || defaultAvatar); // Set avatar or default
       } catch (error) {
         console.error('Error fetching user data:', error);
         // Handle the error appropriately
@@ -231,23 +282,10 @@ const Settings = () => {
                 </h3>
               </div>
               <div className="p-7">
-                <form action="#">
+                <form>
                   <div className="mb-4 flex items-center gap-3">
                     <div className="h-14 w-14 rounded-full">
-                      <img src={userThree} alt="User" />
-                    </div>
-                    <div>
-                      <span className="mb-1.5 text-black dark:text-white">
-                        Rediger dit billede
-                      </span>
-                      <span className="flex gap-2.5">
-                        <button className="text-sm hover:text-primary">
-                          Slet
-                        </button>
-                        <button className="text-sm hover:text-primary">
-                          Opdater
-                        </button>
-                      </span>
+                      <img src={avatar} alt="User Avatar" />
                     </div>
                   </div>
 
@@ -258,6 +296,7 @@ const Settings = () => {
                     <input
                       type="file"
                       accept="image/*"
+                      onChange={handleFileChange}
                       className="absolute inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0 outline-none"
                     />
                     <div className="flex flex-col items-center justify-center space-y-3">
@@ -290,8 +329,8 @@ const Settings = () => {
                         </svg>
                       </span>
                       <p>
-                        <span className="text-primary">Click to upload</span> or
-                        drag and drop
+                        <span className="text-primary">Klik for at upload</span>{' '}
+                        eller drag and drop
                       </p>
                       <p className="mt-1.5">SVG, PNG, JPG or GIF</p>
                       <p>(max, 800 X 800px)</p>
@@ -301,15 +340,15 @@ const Settings = () => {
                   <div className="flex justify-end gap-4.5">
                     <button
                       className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
-                      type="submit"
+                      type="button"
                     >
-                      Cancel
+                      Annuller
                     </button>
                     <button
                       className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-70"
-                      type="submit"
+                      onClick={handleSave}
                     >
-                      Save
+                      Gem
                     </button>
                   </div>
                 </form>
