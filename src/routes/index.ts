@@ -1,5 +1,4 @@
 import { lazy } from 'react';
-import CreateAutomatisering from '../pages/CreateAutomatisering';
 
 const Chatbots = lazy(() => import('../pages/Chatbots'));
 const Chatbot = lazy(() => import('../pages/Chatbot'));
