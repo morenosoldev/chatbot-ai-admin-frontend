@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 // Define a type for the user data
 interface User {
+  _id: string;
   id: string;
   name: string;
   email: string;
@@ -32,11 +33,14 @@ export const authSlice = createSlice({
       state.isLoggedIn = true;
       state.authToken = action.payload.authToken;
       state.user = action.payload.user;
+      console.log(action.payload.authToken);
+      localStorage.setItem('authToken', action.payload.authToken);
     },
     logout: (state) => {
       state.isLoggedIn = false;
       state.authToken = null;
       state.user = null;
+      localStorage.removeItem('authToken');
     },
   },
 });
