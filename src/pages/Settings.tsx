@@ -1,64 +1,154 @@
+import React, {
+  MouseEvent,
+  ChangeEvent,
+  FormEvent,
+  useEffect,
+  useState,
+} from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store/store';
 import Breadcrumb from '../components/Breadcrumb';
-import userThree from '../images/user/user-03.png';
-import fireToast from '../hooks/fireToast';
-import { useState, useEffect } from 'react';
+import instance from '../axios/instance';
+import toast from 'react-hot-toast';
+
+interface UserData {
+  name: string;
+  phone: string;
+  email: string;
+  avatar?: string; // Assuming avatar URL is part of the user data
+}
+
 const Settings = () => {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [rows, setRows] = useState(
-    localStorage.getItem('alertSettings')
-      ? JSON.parse(localStorage.getItem('alertSettings'))
-      : [],
-  );
-  useEffect(() => {
-    // storing input name
-    localStorage.setItem('alertSettings', JSON.stringify(rows));
-  }, [rows]);
-  const [rowToEdit, setRowToEdit] = useState(null);
+  const userId = useSelector((state: RootState) => state.auth.user?._id);
+  const [userData, setUserData] = useState<UserData>({
+    name: '',
+    phone: '',
+    email: '',
+  }); // Initialized with empty strings
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const defaultAvatar =
+    "'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'";
+  const [avatar, setAvatar] = useState(defaultAvatar); // Default avatar state
 
-  const handleDeleteRow = (targetIndex) => {
-    setRows(rows.filter((_, idx) => idx !== targetIndex));
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    if (event.target.files && event.target.files[0]) {
+      setSelectedFile(event.target.files[0]);
+    }
   };
 
-  const handleEditRow = (idx) => {
-    setRowToEdit(idx);
+  const handleSave = async (
+    e: MouseEvent<HTMLButtonElement> | FormEvent<HTMLFormElement>,
+  ) => {
+    e.preventDefault();
+    if (selectedFile) {
+      try {
+        const formData = new FormData();
+        formData.append('file', selectedFile);
 
-    setModalOpen(true);
-  };
-
-  const handleSubmit = (newRow) => {
-    rowToEdit === null
-      ? setRows([...rows, newRow])
-      : setRows(
-          rows.map((currRow, idx) => {
-            if (idx !== rowToEdit) return currRow;
-
-            return newRow;
-          }),
+        // Upload the image
+        const uploadResponse = await instance.post(
+          '/media/image/upload',
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          },
         );
+        // Get the image ID from the response
+        const imageId = uploadResponse.data.data.id;
+
+        // Update user avatar with the image ID
+        const imageResponse = await instance.post('/user/update/avatar', {
+          imageId: imageId,
+        });
+
+        setAvatar(imageResponse.data.data.image); // Update avatar with the new image URL
+        showToast('Success', 'Dit billede er blevet opdateret!', 'success');
+
+        // Handle success (e.g., show a success message)
+      } catch (error) {
+        console.error('Error:', error);
+        // Handle error (e.g., show an error message)
+      }
+    }
+  };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        console.log('Fetching user data', userId);
+        const response = await instance.get(`/me`);
+        console.log('response', response.data.data);
+        const fetchedUserData = response.data.data as UserData;
+        setUserData(fetchedUserData);
+        setAvatar(fetchedUserData.avatar || defaultAvatar); // Set avatar or default
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        // Handle the error appropriately
+      }
+    };
+
+    if (userId) {
+      fetchUserData();
+    }
+  }, [userId]);
+
+  const handleUpdateUserData = async () => {
+    try {
+      const response = await instance.put(`/user/update`, userData);
+      console.log('response', response.data.data);
+      showToast('Success', 'Din bruger er blevet opdateret!', 'success');
+    } catch (error) {
+      console.error('Error updating user data:', error);
+      // Handle the error appropriately
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setUserData((prevUserData) => ({
+      ...prevUserData,
+      [name]: value,
+    }));
+  };
+
+  const showToast = (
+    title: string,
+    message: string,
+    type: 'success' | 'error',
+  ) => {
+    toast[type](
+      <div>
+        <strong>{title}</strong>
+        <p>{message}</p>
+      </div>,
+    );
   };
 
   return (
     <>
       <div className="mx-auto max-w-270">
-        <Breadcrumb pageName="Settings" />
+        <Breadcrumb pageName="Indstillinger" />
 
         <div className="grid grid-cols-5 gap-8">
           <div className="col-span-5 xl:col-span-3">
             <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
               <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
                 <h3 className="font-medium text-black dark:text-white">
-                  Personal Information
+                  Personlig information
                 </h3>
               </div>
               <div className="p-7">
-                <form action="#">
+                <form>
                   <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                     <div className="w-full sm:w-1/2">
                       <label
                         className="mb-3 block text-sm font-medium text-black dark:text-white"
                         htmlFor="fullName"
                       >
-                        Full Name
+                        Fulde navn
                       </label>
                       <div className="relative">
                         <span className="absolute left-4.5 top-4">
@@ -89,8 +179,10 @@ const Settings = () => {
                         <input
                           className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                           type="text"
-                          name="fullName"
-                          id="fullName"
+                          value={userData.name}
+                          onChange={handleInputChange}
+                          name="name"
+                          id="name"
                           placeholder="Devid Jhon"
                           defaultValue="Devid Jhon"
                         />
@@ -100,17 +192,19 @@ const Settings = () => {
                     <div className="w-full sm:w-1/2">
                       <label
                         className="mb-3 block text-sm font-medium text-black dark:text-white"
-                        htmlFor="phoneNumber"
+                        htmlFor="phone"
                       >
-                        Phone Number
+                        Telefon nummer
                       </label>
                       <input
                         className="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                         type="text"
-                        name="phoneNumber"
-                        id="phoneNumber"
-                        placeholder="+990 3343 7865"
-                        defaultValue="+990 3343 7865"
+                        value={userData.phone}
+                        onChange={handleInputChange}
+                        name="phone"
+                        id="phone"
+                        placeholder="+45 22156649"
+                        defaultValue="+45 22156649"
                       />
                     </div>
                   </div>
@@ -120,7 +214,7 @@ const Settings = () => {
                       className="mb-3 block text-sm font-medium text-black dark:text-white"
                       htmlFor="emailAddress"
                     >
-                      Email Address
+                      Email
                     </label>
                     <div className="relative">
                       <span className="absolute left-4.5 top-4">
@@ -151,94 +245,29 @@ const Settings = () => {
                       <input
                         className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                         type="email"
-                        name="emailAddress"
-                        id="emailAddress"
+                        value={userData.email}
+                        onChange={handleInputChange}
+                        name="email"
+                        id="email"
                         placeholder="devidjond45@gmail.com"
                         defaultValue="devidjond45@gmail.com"
                       />
                     </div>
                   </div>
 
-                  <div className="mb-5.5">
-                    <label
-                      className="mb-3 block text-sm font-medium text-black dark:text-white"
-                      htmlFor="Username"
-                    >
-                      Username
-                    </label>
-                    <input
-                      className="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                      type="text"
-                      name="Username"
-                      id="Username"
-                      placeholder="devidjhon24"
-                      defaultValue="devidjhon24"
-                    />
-                  </div>
-
-                  <div className="mb-5.5">
-                    <label
-                      className="mb-3 block text-sm font-medium text-black dark:text-white"
-                      htmlFor="Username"
-                    >
-                      BIO
-                    </label>
-                    <div className="relative">
-                      <span className="absolute left-4.5 top-4">
-                        <svg
-                          className="fill-current"
-                          width="20"
-                          height="20"
-                          viewBox="0 0 20 20"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g opacity="0.8" clipPath="url(#clip0_88_10224)">
-                            <path
-                              fillRule="evenodd"
-                              clipRule="evenodd"
-                              d="M1.56524 3.23223C2.03408 2.76339 2.66997 2.5 3.33301 2.5H9.16634C9.62658 2.5 9.99967 2.8731 9.99967 3.33333C9.99967 3.79357 9.62658 4.16667 9.16634 4.16667H3.33301C3.11199 4.16667 2.90003 4.25446 2.74375 4.41074C2.58747 4.56702 2.49967 4.77899 2.49967 5V16.6667C2.49967 16.8877 2.58747 17.0996 2.74375 17.2559C2.90003 17.4122 3.11199 17.5 3.33301 17.5H14.9997C15.2207 17.5 15.4326 17.4122 15.5889 17.2559C15.7452 17.0996 15.833 16.8877 15.833 16.6667V10.8333C15.833 10.3731 16.2061 10 16.6663 10C17.1266 10 17.4997 10.3731 17.4997 10.8333V16.6667C17.4997 17.3297 17.2363 17.9656 16.7674 18.4344C16.2986 18.9033 15.6627 19.1667 14.9997 19.1667H3.33301C2.66997 19.1667 2.03408 18.9033 1.56524 18.4344C1.0964 17.9656 0.833008 17.3297 0.833008 16.6667V5C0.833008 4.33696 1.0964 3.70107 1.56524 3.23223Z"
-                              fill=""
-                            />
-                            <path
-                              fillRule="evenodd"
-                              clipRule="evenodd"
-                              d="M16.6664 2.39884C16.4185 2.39884 16.1809 2.49729 16.0056 2.67253L8.25216 10.426L7.81167 12.188L9.57365 11.7475L17.3271 3.99402C17.5023 3.81878 17.6008 3.5811 17.6008 3.33328C17.6008 3.08545 17.5023 2.84777 17.3271 2.67253C17.1519 2.49729 16.9142 2.39884 16.6664 2.39884ZM14.8271 1.49402C15.3149 1.00622 15.9765 0.732178 16.6664 0.732178C17.3562 0.732178 18.0178 1.00622 18.5056 1.49402C18.9934 1.98182 19.2675 2.64342 19.2675 3.33328C19.2675 4.02313 18.9934 4.68473 18.5056 5.17253L10.5889 13.0892C10.4821 13.196 10.3483 13.2718 10.2018 13.3084L6.86847 14.1417C6.58449 14.2127 6.28409 14.1295 6.0771 13.9225C5.87012 13.7156 5.78691 13.4151 5.85791 13.1312L6.69124 9.79783C6.72787 9.65131 6.80364 9.51749 6.91044 9.41069L14.8271 1.49402Z"
-                              fill=""
-                            />
-                          </g>
-                          <defs>
-                            <clipPath id="clip0_88_10224">
-                              <rect width="20" height="20" fill="white" />
-                            </clipPath>
-                          </defs>
-                        </svg>
-                      </span>
-
-                      <textarea
-                        className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                        name="bio"
-                        id="bio"
-                        rows={6}
-                        placeholder="Write your bio here"
-                        defaultValue="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque posuere fermentum urna, eu condimentum mauris tempus ut. Donec fermentum blandit aliquet."
-                      ></textarea>
-                    </div>
-                  </div>
-
                   <div className="flex justify-end gap-4.5">
                     <button
                       className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
-                      type="submit"
+                      type="button"
                     >
-                      Cancel
+                      Annuller
                     </button>
                     <button
                       className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:shadow-1"
-                      type="submit"
-                      onClick={fireToast}
+                      type="button"
+                      onClick={handleUpdateUserData}
                     >
-                      Save
+                      Gem
                     </button>
                   </div>
                 </form>
@@ -249,27 +278,14 @@ const Settings = () => {
             <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
               <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
                 <h3 className="font-medium text-black dark:text-white">
-                  Your Photo
+                  Dit billede
                 </h3>
               </div>
               <div className="p-7">
-                <form action="#">
+                <form>
                   <div className="mb-4 flex items-center gap-3">
                     <div className="h-14 w-14 rounded-full">
-                      <img src={userThree} alt="User" />
-                    </div>
-                    <div>
-                      <span className="mb-1.5 text-black dark:text-white">
-                        Edit your photo
-                      </span>
-                      <span className="flex gap-2.5">
-                        <button className="text-sm hover:text-primary">
-                          Delete
-                        </button>
-                        <button className="text-sm hover:text-primary">
-                          Update
-                        </button>
-                      </span>
+                      <img src={avatar} alt="User Avatar" />
                     </div>
                   </div>
 
@@ -280,6 +296,7 @@ const Settings = () => {
                     <input
                       type="file"
                       accept="image/*"
+                      onChange={handleFileChange}
                       className="absolute inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0 outline-none"
                     />
                     <div className="flex flex-col items-center justify-center space-y-3">
@@ -312,8 +329,8 @@ const Settings = () => {
                         </svg>
                       </span>
                       <p>
-                        <span className="text-primary">Click to upload</span> or
-                        drag and drop
+                        <span className="text-primary">Klik for at upload</span>{' '}
+                        eller drag and drop
                       </p>
                       <p className="mt-1.5">SVG, PNG, JPG or GIF</p>
                       <p>(max, 800 X 800px)</p>
@@ -323,15 +340,15 @@ const Settings = () => {
                   <div className="flex justify-end gap-4.5">
                     <button
                       className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
-                      type="submit"
+                      type="button"
                     >
-                      Cancel
+                      Annuller
                     </button>
                     <button
                       className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-70"
-                      type="submit"
+                      onClick={handleSave}
                     >
-                      Save
+                      Gem
                     </button>
                   </div>
                 </form>
