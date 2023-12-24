@@ -69,12 +69,13 @@ const Create = () => {
         navigate(`/chatbots/${response.data.data.id}`);
       })
       .catch((error) => {
+        console.log('Error creating bot:', error.response.data.message);
+
         showToast(
           'Fejl',
-          `Der skete en fejl: ${error.response.data.data.message}`,
+          `Der skete en fejl: ${error.response.data.message}`,
           'error',
         );
-        console.error('Error creating bot:', error.response.data.data.message);
       });
   };
 
