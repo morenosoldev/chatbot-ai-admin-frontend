@@ -5,6 +5,7 @@ import SignUp from '../../pages/Authentication/SignUp';
 import { store } from '../../store/store.ts';
 import { Provider } from 'react-redux';
 
+
 describe('Intergration Testing for Sign Up.', () => {
 
     
@@ -41,7 +42,8 @@ describe('Intergration Testing for Sign Up.', () => {
                 </BrowserRouter>
             </Provider>
         );
-        //This test is crteating a user in the backend, if you run the test twice it will fail. Change the email and it will no longer fail
+
+        // Creates a new user every time it runs.
         fireEvent.change(screen.getByPlaceholderText(/enter your full name/i), { target: { value: 'John Doe' } });
         fireEvent.change(screen.getByPlaceholderText(/Enter your email/i), { target: { value: uniqueEmail } });
         fireEvent.change(screen.getByTestId('password-input'), { target: { value: 'password' } });
@@ -55,5 +57,6 @@ describe('Intergration Testing for Sign Up.', () => {
             expect(authToken).toBeTruthy();
         });
     });
+
 });
 

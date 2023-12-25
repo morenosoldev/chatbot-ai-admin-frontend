@@ -47,6 +47,7 @@ const SignUp = () => {
         },
       );
 
+      console.log(response)
       if (response.status === 200) {
         console.log('Logged in successfully', response.data.data);
         localStorage.setItem('authToken', response.data.data.accessToken);
