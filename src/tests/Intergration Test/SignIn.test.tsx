@@ -4,11 +4,21 @@ import '@testing-library/jest-dom';
 import SignIn from '../../pages/Authentication/SignIn';
 import { store } from '../../store/store.ts';
 import { Provider } from 'react-redux';
+import instance from '../../axios/instance';
+
+jest.mock('../../axios/instance');
+
+const mockedInstance = instance as jest.Mocked<typeof instance>;
+
+
 
 describe('Intergration Testing for Sign In', () => {
 
     test('Testing for the right error message from the server, and that it gets displayed, when user is invalid', async () => {
-       
+
+        const mockResponse = { status: 404, data: { data: { message: "Not Found", status: 404} } };
+        mockedInstance.post.mockResolvedValue(mockResponse);
+
         render(
             <Provider store={store}>
                 <BrowserRouter>
@@ -24,10 +34,14 @@ describe('Intergration Testing for Sign In', () => {
 
         const errorMessage = await screen.findByText(/Not Found/i);
         expect(errorMessage).toBeInTheDocument();
+
     });
 
     test('Token added on successfull login', async () => {
-       
+
+        const mockResponse = { status: 200, data: { data: { accessToken: 'test-token' } } };
+        mockedInstance.post.mockResolvedValue(mockResponse);
+
         render(
             <Provider store={store}>
                 <BrowserRouter>
@@ -46,4 +60,8 @@ describe('Intergration Testing for Sign In', () => {
             expect(authToken).toBeTruthy();
         });
     });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+      });
 });
