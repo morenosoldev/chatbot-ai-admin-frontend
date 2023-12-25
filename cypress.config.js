@@ -1,11 +1,12 @@
-import { defineConfig } from "cypress";
+import { defineConfig } from 'cypress';
 
 export default defineConfig({
+  projectId: 'qiozua',
   viewportWidth: 1280,
   viewportHeight: 720,
-  fixturesFolder: "cypress/fixtures",
-  videosFolder: "cypress/videos",
-  screenshotsFolder: "cypress/screenshots",
+  fixturesFolder: 'cypress/fixtures',
+  videosFolder: 'cypress/videos',
+  screenshotsFolder: 'cypress/screenshots',
   video: false,
 
   e2e: {
@@ -16,8 +17,8 @@ export default defineConfig({
   },
   component: {
     devServer: {
-      framework: "react",
-      bundler: "vite",
+      framework: 'react',
+      bundler: 'vite',
     },
   },
 });
