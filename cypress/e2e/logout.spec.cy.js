@@ -1,6 +1,6 @@
 describe('Logout Test', () => {
   it('successfully logs in and logouts', () => {
-    cy.visit('http://localhost:5173/auth/signin'); // Change this to the path of your login page
+    cy.visit('/auth/signin'); // Change this to the path of your login page
 
     cy.get('input[type="email"]').type('andreas.moreno@outlook.dk');
     cy.get('input[type="password"]').type('testtest');
