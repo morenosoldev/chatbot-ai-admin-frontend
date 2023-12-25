@@ -4,19 +4,12 @@ import '@testing-library/jest-dom';
 import SignUp from '../../pages/Authentication/SignUp';
 import { store } from '../../store/store.ts';
 import { Provider } from 'react-redux';
-import instance from '../../axios/instance';
 
-jest.mock('../../axios/instance');
-
-const mockedInstance = instance as jest.Mocked<typeof instance>;
 
 describe('Intergration Testing for Sign Up.', () => {
 
     
       test('Displays error message from server, when email already exsist', async () => {
-
-        const mockResponse = { status: 400, data: { data: { message: 'Conflict', status: 400} } };
-        mockedInstance.post.mockResolvedValue(mockResponse);
 
         render(
             <Provider store={store}>
@@ -32,18 +25,13 @@ describe('Intergration Testing for Sign Up.', () => {
         fireEvent.change(screen.getByTestId('confirm-password-input'), { target: { value: 'password' } });
         const submitButton = screen.getByRole('button', { name: /create account/i });
         fireEvent.click(submitButton);
-        
-        await waitFor( async () => { 
+    
         const errorMessage = await screen.findByText(/Conflict/i);
         expect(errorMessage).toBeInTheDocument();
-    });
 
       });
 
     test('token added on successful sign up', async () => {
-
-        const mockResponse = { status: 200, data: { data: { accessToken: 'test-token' } } };
-        mockedInstance.post.mockResolvedValue(mockResponse);
 
         const uniqueEmail = `testuser${Date.now()}@valid.com`;
 
@@ -54,7 +42,8 @@ describe('Intergration Testing for Sign Up.', () => {
                 </BrowserRouter>
             </Provider>
         );
-        //This test is crteating a user in the backend, if you run the test twice it will fail. Change the email and it will no longer fail
+
+        // Creates a new user every time it runs.
         fireEvent.change(screen.getByPlaceholderText(/enter your full name/i), { target: { value: 'John Doe' } });
         fireEvent.change(screen.getByPlaceholderText(/Enter your email/i), { target: { value: uniqueEmail } });
         fireEvent.change(screen.getByTestId('password-input'), { target: { value: 'password' } });
@@ -69,8 +58,5 @@ describe('Intergration Testing for Sign Up.', () => {
         });
     });
 
-    afterEach(() => {
-        jest.clearAllMocks();
-      });
 });
 

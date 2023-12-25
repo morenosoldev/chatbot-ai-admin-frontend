@@ -20,6 +20,7 @@ interface UserData {
 
 const Settings = () => {
   const userId = useSelector((state: RootState) => state.auth.user?._id);
+  const [phoneError, setPhoneError] = useState('');
   const [userData, setUserData] = useState<UserData>({
     name: '',
     phone: '',
@@ -83,10 +84,9 @@ const Settings = () => {
         console.log('response', response.data.data);
         const fetchedUserData = response.data.data as UserData;
         setUserData(fetchedUserData);
-        setAvatar(fetchedUserData.avatar || defaultAvatar); // Set avatar or default
+        setAvatar(fetchedUserData.avatar || defaultAvatar);
       } catch (error) {
         console.error('Error fetching user data:', error);
-        // Handle the error appropriately
       }
     };
 
@@ -96,13 +96,20 @@ const Settings = () => {
   }, [userId]);
 
   const handleUpdateUserData = async () => {
+    setPhoneError('');
+  
+    const phoneRegex = /^[1-9][0-9]{7}$/;
+    if (!phoneRegex.test(userData.phone)) {
+      setPhoneError('Indtast telefonnummeret korrekt');
+      return;
+    }
+  
     try {
       const response = await instance.put(`/user/update`, userData);
       console.log('response', response.data.data);
       showToast('Success', 'Din bruger er blevet opdateret!', 'success');
     } catch (error) {
       console.error('Error updating user data:', error);
-      // Handle the error appropriately
     }
   };
 
@@ -113,7 +120,7 @@ const Settings = () => {
       [name]: value,
     }));
   };
-
+ 
   const showToast = (
     title: string,
     message: string,
@@ -206,6 +213,9 @@ const Settings = () => {
                         placeholder="+45 22156649"
                         defaultValue="+45 22156649"
                       />
+                      {phoneError && (
+                      <div className="mt-2 text-sm text-red">{phoneError}</div>
+                      )}
                     </div>
                   </div>
 
@@ -265,6 +275,7 @@ const Settings = () => {
                     <button
                       className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:shadow-1"
                       type="button"
+                      data-testid="save-button"
                       onClick={handleUpdateUserData}
                     >
                       Gem
