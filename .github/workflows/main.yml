@@ -40,3 +40,4 @@ jobs:
           start: npm run dev -- --host
           wait-on: 'http://localhost:5173'
           wait-on-timeout: 60
+          config-file: cypress.config.js
