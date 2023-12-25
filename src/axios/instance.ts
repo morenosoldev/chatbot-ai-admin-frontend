@@ -1,10 +1,6 @@
 import axios from 'axios';
 
-// Determine the base URL based on the environment
-const isProduction = process.env.NODE_ENV === 'production';
-const baseURL = isProduction
-  ? 'https://chatbotai-api.onrender.com'
-  : 'http://localhost:8000/';
+const baseURL = process.env.REACT_PROD_API_URL || 'http://localhost:8000/';
 
 const axiosInstance = axios.create({
   baseURL: baseURL,
