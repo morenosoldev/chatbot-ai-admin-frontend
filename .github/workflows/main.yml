@@ -31,6 +31,13 @@ jobs:
           REACT_APP_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.REACT_APP_FIREBASE_MESSAGING_SENDER_ID }}
           REACT_APP_FIREBASE_APP_ID: ${{ secrets.REACT_APP_FIREBASE_APP_ID }}
           REACT_APP_FIREBASE_MEASUREMENT_ID: ${{ secrets.REACT_APP_FIREBASE_MEASUREMENT_ID }}
+          REACT_PROD_API_URL:
+            ${{ secrets.REACT_PROD_API_URL }}
+
+            # New step to print the REACT_PROD_API_URL
+      - name: Print REACT_PROD_API_URL
+        run: echo "REACT_PROD_API_URL is set to $REACT_PROD_API_URL"
+        env:
           REACT_PROD_API_URL: ${{ secrets.REACT_PROD_API_URL }}
 
       - name: Run Cypress Tests
