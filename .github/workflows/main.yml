@@ -1,0 +1,39 @@
+name: Build and test frontend
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+        env:
+          VITE_API_URL: ${{ secrets.REACT_PROD_API_URL }}
+      - name: Run Cypress Tests
+        uses: cypress-io/github-action@v2
+        with:
+          start: npm run preview -- --host
+          wait-on: 'http://localhost:4173'
+          wait-on-timeout: 60
+          config-file: cypress.config.js
+          record: true
+          parallel: true
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

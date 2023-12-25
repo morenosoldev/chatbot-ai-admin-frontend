@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axiosInstance from '../utils/axiosInstance';
+import axiosInstance from '../axios/instance';
 import { Link } from 'react-router-dom';
 
 interface Chatbot {

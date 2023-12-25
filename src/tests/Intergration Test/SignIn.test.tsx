@@ -8,25 +8,47 @@ import { Provider } from 'react-redux';
 
 
 describe('Intergration Testing for Sign In', () => {
+  // test
 
-    test('Testing for the right error message from the server, and that it gets displayed, when user is invalid', async () => {
-       
-        render(
-            <Provider store={store}>
-                <BrowserRouter>
-                    <SignIn />
-                </BrowserRouter>
-            </Provider>
-        );
+  test('Testing for the right error message from the server, and that it gets displayed, when user is invalid', async () => {
+    render(
+      <Provider store={store}>
+        <BrowserRouter>
+          <SignIn />
+        </BrowserRouter>
+      </Provider>,
+    );
 
-        fireEvent.change(screen.getByPlaceholderText(/skriv din email her/i), { target: { value: 'invalid@invalid.com' } });
-        fireEvent.change(screen.getByPlaceholderText(/skriv dit password her/i), { target: { value: 'invalid' } });
-
-        fireEvent.click(screen.getByRole('button', { name: /login/i }));
-
-        const errorMessage = await screen.findByText(/Not Found/i);
-        expect(errorMessage).toBeInTheDocument();
+    fireEvent.change(screen.getByPlaceholderText(/skriv din email her/i), {
+      target: { value: 'invalid@invalid.com' },
     });
+    fireEvent.change(screen.getByPlaceholderText(/skriv dit password her/i), {
+      target: { value: 'invalid' },
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: /login/i }));
+
+    const errorMessage = await screen.findByText(/Not Found/i);
+    expect(errorMessage).toBeInTheDocument();
+  });
+
+  test('Token added on successfull login', async () => {
+    render(
+      <Provider store={store}>
+        <BrowserRouter>
+          <SignIn />
+        </BrowserRouter>
+      </Provider>,
+    );
+
+    fireEvent.change(screen.getByPlaceholderText(/skriv din email her/i), {
+      target: { value: 'info@spacebox.dk' },
+    });
+    fireEvent.change(screen.getByPlaceholderText(/skriv dit password her/i), {
+      target: { value: 'mormor' },
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: /login/i }));
 
     test('Token added on successfull login', async () => {
 
@@ -49,5 +71,5 @@ describe('Intergration Testing for Sign In', () => {
         });
     });
 
-
 });
+

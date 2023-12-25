@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axiosInstance from '../../../utils/axiosInstance';
+import axiosInstance from '../../../axios/instance';
 
 interface Message {
   isBot: boolean;
@@ -43,8 +43,7 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
     if (!userInput.trim() || !chatbot) return;
     setLoading(true);
     const currentConversationId =
-    conversationId || (await fetchConversationId(chatbot._id));
-
+      conversationId || (await fetchConversationId(chatbot._id));
 
     const userMessage: Message = { isBot: false, message: userInput };
     setMessages((prevMessages) => [...prevMessages, userMessage]);
@@ -99,7 +98,7 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
   };
 
   const handleSuggestedMessageClick = async (suggestedMessage: string) => {
-    if(!chatbot) return;
+    if (!chatbot) return;
     setLoading(true);
     const currentConversationId =
       conversationId || (await fetchConversationId(chatbot._id));
@@ -162,18 +161,19 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
   async function fetchConversationId(chatbotId: string) {
     try {
       // Use the Axios instance to send a POST request
-      const response = await axiosInstance.post(`/bot/conversation/${chatbotId}`);
-  
+      const response = await axiosInstance.post(
+        `/bot/conversation/${chatbotId}`,
+      );
+
       const data = response.data;
-      console.log("data.conversationId", data.conversationId);
+      console.log('data.conversationId', data.conversationId);
       setConversationId(data.conversationId); // Store the retrieved conversation ID
       return data.conversationId; // Return the retrieved conversation ID
     } catch (error) {
-      console.error("Error fetching conversation ID:", error);
+      console.error('Error fetching conversation ID:', error);
       return null; // Return null in case of an error
     }
   }
-
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {

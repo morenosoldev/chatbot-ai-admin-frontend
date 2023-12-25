@@ -2,7 +2,7 @@
 
 describe('Chatbot Creation', () => {
   it('Creates a new chatbot', () => {
-    cy.visit('http://localhost:5173/auth/signin'); // Change this to the path of your login page
+    cy.visit('/auth/signin'); // Change this to the path of your login page
 
     // Replace 'your-email' and 'your-password' with the credentials you want to use for the test
     cy.get('input[type="email"]').type('andreas.moreno@outlook.dk');
@@ -68,7 +68,7 @@ describe('Chatbot Creation', () => {
   });
 
   it('Creates a new chatbot with illegal name', () => {
-    cy.visit('http://localhost:5173/auth/signin'); // Change this to the path of your login page
+    cy.visit('/auth/signin'); // Change this to the path of your login page
 
     // Replace 'your-email' and 'your-password' with the credentials you want to use for the test
     cy.get('input[type="email"]').type('andreas.moreno@outlook.dk');

@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
-import instance from '../utils/axiosInstance';
+import axiosInstance from '../axios/instance';
 
 interface FormData {
   email: string;
@@ -34,7 +34,7 @@ const CreateUserModal = ({ showModal, setShowModal }: Props) => {
     setIsLoading(true);
 
     try {
-      const response = await instance.post('/auth/sign-up', formData);
+      const response = await axiosInstance.post('/auth/sign-up', formData);
 
       // Handle the response (e.g., show success message, reset form, close modal, etc.)
       console.log('User created!', response.data);
