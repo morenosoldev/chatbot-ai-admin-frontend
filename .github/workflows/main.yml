@@ -22,14 +22,14 @@ jobs:
         run: npm install
 
       - name: Build
-        run: npm run build
+        run: npm run preview
         env:
           VITE_API_URL: ${{ secrets.REACT_PROD_API_URL }}
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v2
         with:
-          start: npm run dev -- --host
-          wait-on: 'http://localhost:5173'
+          start: npm run preview -- --host
+          wait-on: 'http://localhost:4173'
           wait-on-timeout: 60
           config-file: cypress.config.js
           record: true
