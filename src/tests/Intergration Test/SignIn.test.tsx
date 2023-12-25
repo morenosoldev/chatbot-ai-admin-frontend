@@ -2,15 +2,19 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
 import SignIn from '../../pages/Authentication/SignIn';
-
+import { store } from '../../store/store.ts';
+import { Provider } from 'react-redux';
 
 describe('Intergration Testing for Sign In', () => {
 
     test('Testing for the right error message from the server, and that it gets displayed, when user is invalid', async () => {
+       
         render(
-            <BrowserRouter>
-                <SignIn />
-            </BrowserRouter>
+            <Provider store={store}>
+                <BrowserRouter>
+                    <SignIn />
+                </BrowserRouter>
+            </Provider>
         );
 
         fireEvent.change(screen.getByPlaceholderText(/skriv din email her/i), { target: { value: 'invalid@invalid.com' } });
@@ -23,11 +27,14 @@ describe('Intergration Testing for Sign In', () => {
     });
 
     test('Token added on successfull login', async () => {
+       
         render(
-            <BrowserRouter>
-                <SignIn />
-            </BrowserRouter>
-        );
+            <Provider store={store}>
+                <BrowserRouter>
+                    <SignIn />
+                </BrowserRouter>
+            </Provider>
+        );  
 
         fireEvent.change(screen.getByPlaceholderText(/skriv din email her/i), { target: { value: 'info@spacebox.dk' } });
         fireEvent.change(screen.getByPlaceholderText(/skriv dit password her/i), { target: { value: 'mormor' } });
