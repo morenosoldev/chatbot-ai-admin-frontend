@@ -21,23 +21,10 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Setup .env.production file
-        run: |
-          echo "VITE_APP_FIREBASE_API_KEY=${{ secrets.REACT_APP_FIREBASE_API_KEY }}" >> .env.production
-          echo "VITE_APP_FIREBASE_AUTH_DOMAIN=${{ secrets.REACT_APP_FIREBASE_AUTH_DOMAIN }}" >> .env.production
-          echo "VITE_APP_FIREBASE_PROJECT_ID=${{ secrets.REACT_APP_FIREBASE_PROJECT_ID }}" >> .env.production
-          echo "VITE_APP_FIREBASE_STORAGE_BUCKET=${{ secrets.REACT_APP_FIREBASE_STORAGE_BUCKET }}" >> .env.production
-          echo "VITE_APP_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.REACT_APP_FIREBASE_MESSAGING_SENDER_ID }}" >> .env.production
-          echo "VITE_APP_FIREBASE_APP_ID=${{ secrets.REACT_APP_FIREBASE_APP_ID }}" >> .env.production
-          echo "VITE_APP_FIREBASE_MEASUREMENT_ID=${{ secrets.REACT_APP_FIREBASE_MEASUREMENT_ID }}" >> .env.production
-          echo "VITE_PROD_API_URL=https://chatbotai-api.onrender.com" >> .env.production
-
-      - name: Display .env.production contents
-        run: cat .env.production
-
       - name: Build
         run: npm run build
-
+        env:
+          VITE_API_URL: ${{ secrets.REACT_PROD_API_URL }}
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v2
         with:
