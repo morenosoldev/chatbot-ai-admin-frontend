@@ -6,44 +6,51 @@ import { store } from '../../store/store.ts';
 import { Provider } from 'react-redux';
 
 describe('Intergration Testing for Sign In', () => {
+  // test
 
-    test('Testing for the right error message from the server, and that it gets displayed, when user is invalid', async () => {
-       
-        render(
-            <Provider store={store}>
-                <BrowserRouter>
-                    <SignIn />
-                </BrowserRouter>
-            </Provider>
-        );
+  test('Testing for the right error message from the server, and that it gets displayed, when user is invalid', async () => {
+    render(
+      <Provider store={store}>
+        <BrowserRouter>
+          <SignIn />
+        </BrowserRouter>
+      </Provider>,
+    );
 
-        fireEvent.change(screen.getByPlaceholderText(/skriv din email her/i), { target: { value: 'invalid@invalid.com' } });
-        fireEvent.change(screen.getByPlaceholderText(/skriv dit password her/i), { target: { value: 'invalid' } });
-
-        fireEvent.click(screen.getByRole('button', { name: /login/i }));
-
-        const errorMessage = await screen.findByText(/Not Found/i);
-        expect(errorMessage).toBeInTheDocument();
+    fireEvent.change(screen.getByPlaceholderText(/skriv din email her/i), {
+      target: { value: 'invalid@invalid.com' },
+    });
+    fireEvent.change(screen.getByPlaceholderText(/skriv dit password her/i), {
+      target: { value: 'invalid' },
     });
 
-    test('Token added on successfull login', async () => {
-       
-        render(
-            <Provider store={store}>
-                <BrowserRouter>
-                    <SignIn />
-                </BrowserRouter>
-            </Provider>
-        );  
+    fireEvent.click(screen.getByRole('button', { name: /login/i }));
 
-        fireEvent.change(screen.getByPlaceholderText(/skriv din email her/i), { target: { value: 'info@spacebox.dk' } });
-        fireEvent.change(screen.getByPlaceholderText(/skriv dit password her/i), { target: { value: 'mormor' } });
+    const errorMessage = await screen.findByText(/Not Found/i);
+    expect(errorMessage).toBeInTheDocument();
+  });
 
-        fireEvent.click(screen.getByRole('button', { name: /login/i }));
+  test('Token added on successfull login', async () => {
+    render(
+      <Provider store={store}>
+        <BrowserRouter>
+          <SignIn />
+        </BrowserRouter>
+      </Provider>,
+    );
 
-        await waitFor(() => {
-            const authToken = localStorage.getItem('authToken');
-            expect(authToken).toBeTruthy();
-        });
+    fireEvent.change(screen.getByPlaceholderText(/skriv din email her/i), {
+      target: { value: 'info@spacebox.dk' },
     });
+    fireEvent.change(screen.getByPlaceholderText(/skriv dit password her/i), {
+      target: { value: 'mormor' },
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: /login/i }));
+
+    await waitFor(() => {
+      const authToken = localStorage.getItem('authToken');
+      expect(authToken).toBeTruthy();
+    });
+  });
 });
