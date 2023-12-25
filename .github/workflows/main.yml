@@ -22,7 +22,7 @@ jobs:
         run: npm install
 
       - name: Build
-        run: npm run preview
+        run: npm run build
         env:
           VITE_API_URL: ${{ secrets.REACT_PROD_API_URL }}
       - name: Run Cypress Tests
