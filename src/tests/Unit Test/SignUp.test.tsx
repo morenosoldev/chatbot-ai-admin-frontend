@@ -2,16 +2,21 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
 import SignUp from '../../pages/Authentication/SignUp';
-
+import { store } from '../../store/store.ts';
+import { Provider } from 'react-redux';
 
 describe('SignUp', () => {
 
   test('displays an error message when fields are empty', () => {
+
     render(
-      <BrowserRouter>
-        <SignUp />
-      </BrowserRouter>
+        <Provider store={store}>
+            <BrowserRouter>
+                <SignUp />
+            </BrowserRouter>
+        </Provider>
     );
+
 
     const submitButton = screen.getByRole('button', { name: /create account/i });
     fireEvent.click(submitButton);
@@ -20,11 +25,15 @@ describe('SignUp', () => {
   });
 
   test('Displays error message when the passwords does not match', () => {
-    render(
-      <BrowserRouter>
-        <SignUp />
-      </BrowserRouter>
-    );
+
+        render(
+            <Provider store={store}>
+                <BrowserRouter>
+                    <SignUp />
+                </BrowserRouter>
+            </Provider>
+        );
+
     fireEvent.change(screen.getByPlaceholderText(/enter your full name/i), { target: { value: 'John Doe' } });
     fireEvent.change(screen.getByPlaceholderText(/Enter your email/i), { target: { value: 'valid@valid.com' } });
     fireEvent.change(screen.getByTestId('password-input'), { target: { value: 'password' } });
