@@ -25,6 +25,9 @@ jobs:
         run: npm run build
         env:
           VITE_API_URL: ${{ secrets.REACT_PROD_API_URL }}
+      - name: Run Jest Tests
+        run: npm test
+
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v2
         with:
