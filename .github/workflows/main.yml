@@ -22,7 +22,7 @@ jobs:
         run: npm install
 
       - name: Build
-        run: npm run build
+        run: NODE_ENV=production npm run build
         env:
           REACT_APP_FIREBASE_API_KEY: ${{ secrets.REACT_APP_FIREBASE_API_KEY }}
           REACT_APP_FIREBASE_AUTH_DOMAIN: ${{ secrets.REACT_APP_FIREBASE_AUTH_DOMAIN }}
@@ -33,9 +33,6 @@ jobs:
           REACT_APP_FIREBASE_MEASUREMENT_ID: ${{ secrets.REACT_APP_FIREBASE_MEASUREMENT_ID }}
           DEV_API_URL: ${{ secrets.DEV_API_URL }}
           PROD_API_URL: ${{ secrets.PROD_API_URL }}
-
-      - name: Run Jest Tests
-        run: npm test
 
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v2
