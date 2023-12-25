@@ -30,7 +30,10 @@ jobs:
           echo "VITE_APP_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.REACT_APP_FIREBASE_MESSAGING_SENDER_ID }}" >> .env.production
           echo "VITE_APP_FIREBASE_APP_ID=${{ secrets.REACT_APP_FIREBASE_APP_ID }}" >> .env.production
           echo "VITE_APP_FIREBASE_MEASUREMENT_ID=${{ secrets.REACT_APP_FIREBASE_MEASUREMENT_ID }}" >> .env.production
-          echo "VITE_PROD_API_URL=${{ secrets.REACT_PROD_API_URL }}" >> .env.production
+          echo "VITE_PROD_API_URL=https://chatbotai-api.onrender.com" >> .env.production
+
+      - name: Display .env.production contents
+        run: cat .env.production
 
       - name: Build
         run: npm run build
