@@ -5,8 +5,6 @@ import SignIn from '../../pages/Authentication/SignIn';
 import { store } from '../../store/store.ts';
 import { Provider } from 'react-redux';
 
-
-
 describe('Intergration Testing for Sign In', () => {
   // test
 
@@ -51,25 +49,27 @@ describe('Intergration Testing for Sign In', () => {
     fireEvent.click(screen.getByRole('button', { name: /login/i }));
 
     test('Token added on successfull login', async () => {
+      render(
+        <Provider store={store}>
+          <BrowserRouter>
+            <SignIn />
+          </BrowserRouter>
+        </Provider>,
+      );
 
-        render(
-            <Provider store={store}>
-                <BrowserRouter>
-                    <SignIn />
-                </BrowserRouter>
-            </Provider>
-        );  
+      fireEvent.change(screen.getByPlaceholderText(/skriv din email her/i), {
+        target: { value: 'info@spacebox.dk' },
+      });
+      fireEvent.change(screen.getByPlaceholderText(/skriv dit password her/i), {
+        target: { value: 'mormor' },
+      });
 
-        fireEvent.change(screen.getByPlaceholderText(/skriv din email her/i), { target: { value: 'info@spacebox.dk' } });
-        fireEvent.change(screen.getByPlaceholderText(/skriv dit password her/i), { target: { value: 'mormor' } });
+      fireEvent.click(screen.getByRole('button', { name: /login/i }));
 
-        fireEvent.click(screen.getByRole('button', { name: /login/i }));
-
-        await waitFor(() => {
-            const authToken = localStorage.getItem('authToken');
-            expect(authToken).toBeTruthy();
-        });
+      await waitFor(() => {
+        const authToken = localStorage.getItem('authToken');
+        expect(authToken).toBeTruthy();
+      });
     });
-
+  });
 });
-
