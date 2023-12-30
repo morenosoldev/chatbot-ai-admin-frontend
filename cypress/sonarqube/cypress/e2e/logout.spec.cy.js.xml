@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testExecutions version="1">
+  <file path="cypress/e2e/logout.spec.cy.js">
+    <testCase name="Logout Test - successfully logs in and logouts" duration="1160"/>
+  </file>
+</testExecutions>

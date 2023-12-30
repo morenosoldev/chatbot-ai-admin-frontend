@@ -1,6 +1,11 @@
 import { defineConfig } from 'cypress';
+import pluginConfig from './cypress/plugins';
 
 export default defineConfig({
+  reporter: 'cypress-sonarqube-reporter',
+  reporterOptions: {
+    outputDir: 'cypress/sonarqube',
+  },
   projectId: 'qiozua',
   viewportWidth: 1280,
   viewportHeight: 720,
@@ -12,7 +17,7 @@ export default defineConfig({
   e2e: {
     baseUrl: 'http://localhost:4173',
     setupNodeEvents(on, config) {
-      // implement node event listeners here
+      return pluginConfig(on, config);
     },
   },
   component: {

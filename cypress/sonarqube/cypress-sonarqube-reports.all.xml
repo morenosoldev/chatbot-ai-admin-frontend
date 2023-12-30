@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testExecutions version="1">
+  <file path="cypress/e2e/chatbot_creation_spec.cy.js">
+    <testCase name="Chatbot Creation - Creates a new chatbot" duration="4332"></testCase>
+    <testCase name="Chatbot Creation - Creates a new chatbot with illegal name" duration="3825"></testCase>
+  </file>
+  <file path="cypress/e2e/login.spec.cy.js">
+    <testCase name="Login Test - successfully logs in" duration="880"></testCase>
+  </file>
+  <file path="cypress/e2e/logout.spec.cy.js">
+    <testCase name="Logout Test - successfully logs in and logouts" duration="1160"></testCase>
+  </file>
+  <file path="cypress/e2e/signIn.spec.cy.ts">
+    <testCase name="Sign In Page Tests - should display an error for empty fields" duration="201"></testCase>
+    <testCase name="Sign In Page Tests - should display an error for incorrect credentials" duration="778"></testCase>
+    <testCase name="Sign In Page Tests - should successfully log in with correct credentials" duration="719"></testCase>
+  </file>
+  <file path="cypress/e2e/signUp.spec.cy.ts">
+    <testCase name="SignUp End-to-End Tests - Displays error message for existing email" duration="1203"></testCase>
+    <testCase name="SignUp End-to-End Tests - Displays error message when fields are empty" duration="130"></testCase>
+    <testCase name="SignUp End-to-End Tests - Displays error message when passwords do not match" duration="1113"></testCase>
+    <testCase name="SignUp End-to-End Tests - Token is added on successful sign up" duration="1419"></testCase>
+  </file>
+</testExecutions>
