@@ -1,11 +1,11 @@
 import Breadcrumb from '../components/Breadcrumb';
-import TableOne from '../components/TableOne';
+import ChatbotTable from '../components/ChatbotTable';
 
 const Chatbots = () => {
   return (
     <>
       <Breadcrumb pageName="Chatbots" />
-      <TableOne />
+      <ChatbotTable />
     </>
   );
 };

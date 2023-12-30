@@ -17,7 +17,7 @@ const SignIn = () => {
   const dispatch = useDispatch();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    e.preventDefault();
     setLoading(true);
 
     if (!email || !password) {
@@ -272,7 +272,7 @@ const SignIn = () => {
                         </g>
                       </svg>
                     </span>
-                    {error && <div className='text-red'>{error}</div>}
+                    {error && <div className="text-red">{error}</div>}
                   </div>
                 </div>
 

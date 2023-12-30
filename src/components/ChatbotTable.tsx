@@ -3,6 +3,7 @@ import axiosInstance from '../axios/instance';
 import { Link } from 'react-router-dom';
 
 interface Chatbot {
+  _id: string;
   id: string;
   name: string;
   message: string;
@@ -15,7 +16,7 @@ interface Chatbot {
   botMessageColor: string;
 }
 
-const TableOne: React.FC = () => {
+const ChatbotTable: React.FC = () => {
   const [chatbots, setChatbots] = useState<Chatbot[]>([]);
 
   useEffect(() => {
@@ -104,4 +105,4 @@ const TableOne: React.FC = () => {
   );
 };
 
-export default TableOne;
+export default ChatbotTable;

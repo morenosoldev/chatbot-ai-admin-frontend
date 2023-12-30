@@ -2,8 +2,15 @@ import instance from '../axios/instance';
 import { useEffect, useState } from 'react';
 import moment from 'moment';
 
-const TableTwo = () => {
-  const [users, setUsers] = useState([]);
+type User = {
+  _id: string;
+  name: string;
+  email: string;
+  createdAt: string;
+};
+
+const UserTable = () => {
+  const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -101,4 +108,4 @@ const TableTwo = () => {
   );
 };
 
-export default TableTwo;
+export default UserTable;

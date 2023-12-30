@@ -1,8 +1,6 @@
 import { Link } from 'react-router-dom';
 import Logo from '../images/logo/ChatbotAI-05.png';
 import DarkModeSwitcher from './DarkModeSwitcher';
-import DropdownMessage from './DropdownMessage';
-import DropdownNotification from './DropdownNotification';
 import DropdownUser from './DropdownUser';
 
 const Header = (props: {

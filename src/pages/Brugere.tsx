@@ -1,6 +1,6 @@
 import Breadcrumb from '../components/Breadcrumb';
 import CreateUserModal from '../components/CreateUserModal';
-import TableTwo from '../components/TableTwo';
+import UserTable from '../components/UserTable';
 import { useState } from 'react';
 
 const Tables = () => {
@@ -18,7 +18,7 @@ const Tables = () => {
           Opret brugere
         </button>
         <CreateUserModal showModal={showModal} setShowModal={setShowModal} />
-        <TableTwo />
+        <UserTable />
       </div>
     </>
   );
