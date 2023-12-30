@@ -178,6 +178,7 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       sendMessage();
+      e.preventDefault();
     }
   };
 
@@ -215,6 +216,8 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
                       ? 'bg-gray-200 px-4 flex items-center py-2 text-left text-black'
                       : 'px-4 py-2 ml-auto text-white'
                   }`}
+                  data-testid={message.isBot ? `bot-message-${index}` : `user-message-${index}`}
+
                 >
                   {message.message}
                   {loading &&
@@ -240,6 +243,7 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
           <div className="flex border-t p-4">
             <input
               id="user-input"
+              data-testid="user-input"
               type="text"
               placeholder="Skriv en besked..."
               className="w-full rounded-l-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -249,6 +253,7 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
             />
             <button
               id="send-button"
+              data-testid="send-button"
               className="rounded-r-md px-4 py-2 text-black transition duration-300 hover:bg-blue-600"
               onClick={sendMessage}
             >
