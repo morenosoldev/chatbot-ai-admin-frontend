@@ -11,18 +11,19 @@ type User = {
 
 const UserTable = () => {
   const [users, setUsers] = useState<User[]>([]);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await instance.get('/users');
         if (response.data.data.length > 0) {
-          setUsers(response.data.data); // Assuming the response contains an array of user objects
+          setUsers(response.data.data);
         } else {
           setUsers([]);
         }
       } catch (error) {
-        console.error('Error fetching users:', error);
+        setError('Error fetching users');
       }
     };
 
@@ -54,7 +55,11 @@ const UserTable = () => {
           <p className="font-medium">Reset password</p>
         </div>
       </div>
-
+      {error && (
+        <div className="text-center py-4">
+          <p className="text-red-500">{error}</p>
+        </div>
+      )}
       {users.length === 0 ? (
         <div className="text-center py-4">
           <p className="text-gray-500">Ikke nogle brugere fundet</p>
