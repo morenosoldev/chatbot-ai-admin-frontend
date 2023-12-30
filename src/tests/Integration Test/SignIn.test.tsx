@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
-import SignIn from '../../pages/Authentication/SignIn';
+import SignIn from '../../pages/Authentication/SignIn.tsx';
 import { store } from '../../store/store.ts';
 import { Provider } from 'react-redux';
 

@@ -39,17 +39,13 @@ const SignIn = () => {
         },
       );
 
-      if (response.status === 200) {
-        dispatch(
-          login({
-            authToken: response.data.data.accessToken,
-            user: response.data.data.user,
-          }),
-        );
-        navigate('/');
-      } else {
-        console.error('Failed to log in');
-      }
+      dispatch(
+        login({
+          authToken: response.data.data.accessToken,
+          user: response.data.data.user,
+        }),
+      );
+      navigate('/');
     } catch (error: any) {
       setError(error.response?.data?.message || 'An error occurred.');
     } finally {

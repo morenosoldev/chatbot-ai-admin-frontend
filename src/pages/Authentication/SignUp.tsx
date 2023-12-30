@@ -14,7 +14,7 @@ const SignUp = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setLoading(true);
 
@@ -38,7 +38,7 @@ const SignUp = () => {
         {
           email: email,
           password: password,
-          name: name
+          name: name,
         },
         {
           headers: {
@@ -46,15 +46,8 @@ const SignUp = () => {
           },
         },
       );
-
-      console.log(response)
-      if (response.status === 200) {
-        console.log('Logged in successfully', response.data.data);
-        localStorage.setItem('authToken', response.data.data.accessToken);
-        navigate('/');
-      } else {
-        console.error('Failed to log in');
-      }
+      localStorage.setItem('authToken', response.data.data.accessToken);
+      navigate('/');
     } catch (error: any) {
       setError(error.response?.data?.message || 'An error occurred.');
     } finally {
@@ -353,7 +346,6 @@ const SignUp = () => {
                       </svg>
                     </span>
                     {error && <div className="text-red">{error}</div>}
-
                   </div>
                 </div>
 
