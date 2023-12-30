@@ -5,6 +5,8 @@ import { store } from '../../store/store.ts';
 import { Provider } from 'react-redux';
 import Settings from '../../pages/Settings.tsx';
 
+jest.mock('react-hot-toast');
+
 describe('Settings Image Upload', () => {
   test('allows a correct image to be uploaded', async () => {
     Object.defineProperty(global, 'Image', {

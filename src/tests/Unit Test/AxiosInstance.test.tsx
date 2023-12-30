@@ -1,12 +1,29 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import axiosInstance from '../../axios/instance';
 
+// Mock the entire axios module
+jest.mock('axios', () => {
+  const originalModule = jest.requireActual('axios');
+
+  return {
+    ...originalModule,
+    create: () => ({
+      ...originalModule.default.create(),
+      interceptors: {
+        request: {
+          use: jest.fn(),
+        },
+      },
+    }),
+  };
+});
+
 describe('Axios Instance', () => {
   it('should include access token in headers if token is present', () => {
     // Set a token in mock localStorage
     window.localStorage.setItem('authToken', 'test-token');
 
-    // Mock implementation for request interceptor
+    // Define mock implementation for request interceptor
     (axios.create().interceptors.request.use as jest.Mock).mockImplementation(
       (config: AxiosRequestConfig) => {
         // Here you can assert if the Authorization header is correctly set

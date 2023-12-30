@@ -33,16 +33,20 @@ const Settings = () => {
   const [fileUploadError, setFileUploadError] = useState('');
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-
     event.preventDefault();
-  
+
     setFileUploadError('');
-  
+
     if (event.target?.files && event.target.files[0]) {
       const file = event.target.files[0];
-      const validFormats = ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml'];
+      const validFormats = [
+        'image/jpeg',
+        'image/png',
+        'image/gif',
+        'image/svg+xml',
+      ];
       const isFormatValid = validFormats.includes(file.type);
-      
+
       const reader = new FileReader();
       reader.onload = (e) => {
         const target = e.target as FileReader;
@@ -50,30 +54,35 @@ const Settings = () => {
         img.onload = () => {
           const isResolutionValid = img.width <= 800 && img.height <= 800;
           if (!isFormatValid && !isResolutionValid) {
-            setFileUploadError('Unsupported file format and resolution too high. Please upload a JPG, PNG, GIF, or SVG with a maximum resolution of 800x800px.');
+            setFileUploadError(
+              'Unsupported file format and resolution too high. Please upload a JPG, PNG, GIF, or SVG with a maximum resolution of 800x800px.',
+            );
           } else if (!isFormatValid) {
-            setFileUploadError('Unsupported file format. Please upload a JPG, PNG, GIF, or SVG.');
+            setFileUploadError(
+              'Unsupported file format. Please upload a JPG, PNG, GIF, or SVG.',
+            );
           } else if (!isResolutionValid) {
-            setFileUploadError('Image resolution is too high. Maximum allowed is 800x800px.');
+            setFileUploadError(
+              'Image resolution is too high. Maximum allowed is 800x800px.',
+            );
           }
         };
         if (target.result) {
           img.src = target.result as string;
         }
       };
-      
+
       reader.onerror = () => {
         setFileUploadError('Error loading file. Please try a different image.');
       };
-  
+
       reader.readAsDataURL(file);
-  
+
       if (isFormatValid) {
         setSelectedFile(file);
       }
     }
   };
-  
 
   const handleSave = async (
     e: MouseEvent<HTMLButtonElement> | FormEvent<HTMLFormElement>,
@@ -101,7 +110,7 @@ const Settings = () => {
         const imageResponse = await instance.post('/user/update/avatar', {
           imageId: imageId,
         });
-        setAvatar(imageResponse.data?.data?.image);// Update avatar with the new image URL
+        setAvatar(imageResponse.data?.data?.image); // Update avatar with the new image URL
         showToast('Success', 'Dit billede er blevet opdateret!', 'success');
 
         // Handle success (e.g., show a success message)
@@ -133,13 +142,13 @@ const Settings = () => {
 
   const handleUpdateUserData = async () => {
     setPhoneError('');
-  
+
     const phoneRegex = /^[1-9][0-9]{7}$/;
     if (!phoneRegex.test(userData.phone)) {
       setPhoneError('Indtast telefonnummeret korrekt');
       return;
     }
-  
+
     try {
       const response = await instance.put(`/user/update`, userData);
       console.log('response', response.data.data);
@@ -156,7 +165,7 @@ const Settings = () => {
       [name]: value,
     }));
   };
- 
+
   const showToast = (
     title: string,
     message: string,
@@ -223,11 +232,11 @@ const Settings = () => {
                           className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                           type="text"
                           value={userData.name}
+                          data-testid="user-name"
                           onChange={handleInputChange}
                           name="name"
                           id="name"
                           placeholder="Devid Jhon"
-                          defaultValue="Devid Jhon"
                         />
                       </div>
                     </div>
@@ -245,12 +254,14 @@ const Settings = () => {
                         value={userData.phone}
                         onChange={handleInputChange}
                         name="phone"
+                        data-testid="user-phone"
                         id="phone"
                         placeholder="+45 22156649"
-                        defaultValue="+45 22156649"
                       />
                       {phoneError && (
-                      <div className="mt-2 text-sm text-red">{phoneError}</div>
+                        <div className="mt-2 text-sm text-red">
+                          {phoneError}
+                        </div>
                       )}
                     </div>
                   </div>
@@ -292,11 +303,11 @@ const Settings = () => {
                         className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                         type="email"
                         value={userData.email}
+                        data-testid="user-email"
                         onChange={handleInputChange}
                         name="email"
                         id="email"
                         placeholder="devidjond45@gmail.com"
-                        defaultValue="devidjond45@gmail.com"
                       />
                     </div>
                   </div>
@@ -385,8 +396,15 @@ const Settings = () => {
                     </div>
                   </div>
                   <div>
-                    {fileUploadError && (<p className="mt-2 text-sm text-red" data-testid="file-upload-error-message">{fileUploadError}</p>)}       
-                    </div>
+                    {fileUploadError && (
+                      <p
+                        className="mt-2 text-sm text-red"
+                        data-testid="file-upload-error-message"
+                      >
+                        {fileUploadError}
+                      </p>
+                    )}
+                  </div>
                   <div className="flex justify-end gap-4.5">
                     <button
                       className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
