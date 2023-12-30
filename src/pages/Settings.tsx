@@ -30,13 +30,50 @@ const Settings = () => {
   const defaultAvatar =
     "'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'";
   const [avatar, setAvatar] = useState(defaultAvatar); // Default avatar state
+  const [fileUploadError, setFileUploadError] = useState('');
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+
     event.preventDefault();
-    if (event.target.files && event.target.files[0]) {
-      setSelectedFile(event.target.files[0]);
+  
+    setFileUploadError('');
+  
+    if (event.target?.files && event.target.files[0]) {
+      const file = event.target.files[0];
+      const validFormats = ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml'];
+      const isFormatValid = validFormats.includes(file.type);
+      
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const target = e.target as FileReader;
+        const img = new Image();
+        img.onload = () => {
+          const isResolutionValid = img.width <= 800 && img.height <= 800;
+          if (!isFormatValid && !isResolutionValid) {
+            setFileUploadError('Unsupported file format and resolution too high. Please upload a JPG, PNG, GIF, or SVG with a maximum resolution of 800x800px.');
+          } else if (!isFormatValid) {
+            setFileUploadError('Unsupported file format. Please upload a JPG, PNG, GIF, or SVG.');
+          } else if (!isResolutionValid) {
+            setFileUploadError('Image resolution is too high. Maximum allowed is 800x800px.');
+          }
+        };
+        if (target.result) {
+          img.src = target.result as string;
+        }
+      };
+      
+      reader.onerror = () => {
+        setFileUploadError('Error loading file. Please try a different image.');
+      };
+  
+      reader.readAsDataURL(file);
+  
+      if (isFormatValid) {
+        setSelectedFile(file);
+      }
     }
   };
+  
 
   const handleSave = async (
     e: MouseEvent<HTMLButtonElement> | FormEvent<HTMLFormElement>,
@@ -64,8 +101,7 @@ const Settings = () => {
         const imageResponse = await instance.post('/user/update/avatar', {
           imageId: imageId,
         });
-
-        setAvatar(imageResponse.data.data.image); // Update avatar with the new image URL
+        setAvatar(imageResponse.data?.data?.image);// Update avatar with the new image URL
         showToast('Success', 'Dit billede er blevet opdateret!', 'success');
 
         // Handle success (e.g., show a success message)
@@ -307,6 +343,7 @@ const Settings = () => {
                     <input
                       type="file"
                       accept="image/*"
+                      data-testid="file-input"
                       onChange={handleFileChange}
                       className="absolute inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0 outline-none"
                     />
@@ -347,7 +384,9 @@ const Settings = () => {
                       <p>(max, 800 X 800px)</p>
                     </div>
                   </div>
-
+                  <div>
+                    {fileUploadError && (<p className="mt-2 text-sm text-red" data-testid="file-upload-error-message">{fileUploadError}</p>)}       
+                    </div>
                   <div className="flex justify-end gap-4.5">
                     <button
                       className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
@@ -356,8 +395,10 @@ const Settings = () => {
                       Annuller
                     </button>
                     <button
+                      data-testid="save-image-button"
                       className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-70"
                       onClick={handleSave}
+                      disabled={!!fileUploadError}
                     >
                       Gem
                     </button>
