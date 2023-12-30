@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import LogoDark from '../../images/logo/ChatbotAI-light.png';
 import Logo from '../../images/logo/ChatbotAI-05.png';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import instance from '../../axios/instance';
 import { AxiosResponse } from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -56,6 +56,10 @@ const SignIn = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    localStorage.removeItem('authToken');
+  }, []);
 
   return (
     <>

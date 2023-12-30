@@ -4,11 +4,11 @@ import { Toaster } from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import { selectIsLoggedIn } from './store/authSlice';
 import { RootState } from './store/store';
-import ECommerce from './pages/Dashboard/ECommerce';
 import SignIn from './pages/Authentication/SignIn';
 import SignUp from './pages/Authentication/SignUp';
 import Loader from './common/Loader';
 import routes from './routes';
+import Chatbots from './pages/Chatbots';
 
 const DefaultLayout = lazy(() => import('./layout/DefaultLayout'));
 
@@ -28,7 +28,7 @@ function App() {
         {/* Protected routes wrapper */}
         {isLoggedIn ? (
           <Route path="/" element={<DefaultLayout />}>
-            <Route index element={<ECommerce />} />
+            <Route index element={<Chatbots />} />
             {routes.map((route, index) => {
               const { path, component: Component } = route;
               return (

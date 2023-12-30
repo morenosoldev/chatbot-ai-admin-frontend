@@ -64,7 +64,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       }`}
     >
-      {/* <!-- SIDEBAR HEADER --> */}
       <div className="flex items-center justify-center gap-2 px-6 py-5.5 lg:py-6.5">
         <NavLink to="/">
           <img src={Logo} alt="Logo" className="w-32" />
@@ -92,19 +91,15 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           </svg>
         </button>
       </div>
-      {/* <!-- SIDEBAR HEADER --> */}
 
       <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
-        {/* <!-- Sidebar Menu --> */}
         <nav className="mt-5 py-4 px-4 lg:mt-9 lg:px-6">
-          {/* <!-- Menu Group --> */}
           <div>
             <h3 className="mb-4 ml-4 text-sm font-semibold text-bodydark2">
               MENU
             </h3>
 
             <ul className="mb-6 flex flex-col gap-1.5">
-              {/* <!-- Menu Item Dashboard --> */}
               <SidebarLinkGroup
                 activeCondition={
                   pathname === '/' || pathname.includes('dashboard')
@@ -171,7 +166,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           />
                         </svg>
                       </NavLink>
-                      {/* <!-- Dropdown Menu Start --> */}
                       <div
                         className={`translate transform overflow-hidden ${
                           !open && 'hidden'
@@ -191,14 +185,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           </li>
                         </ul>
                       </div>
-                      {/* <!-- Dropdown Menu End --> */}
                     </React.Fragment>
                   );
                 }}
               </SidebarLinkGroup>
-              {/* <!-- Menu Item Dashboard --> */}
-
-              {/* <!-- Menu Item Calendar --> */}
               <li>
                 <NavLink
                   to="/chatbots"
@@ -212,9 +202,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 </NavLink>
               </li>
 
-              {/* <!-- Menu Item Calendar --> */}
-
-              {/* <!-- Menu Item Profile --> */}
               <li>
                 <NavLink
                   to="/create"
@@ -227,7 +214,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 </NavLink>
               </li>
 
-              {/* <!-- Menu Item Tables --> */}
               <li>
                 <NavLink
                   to="/brugere"
@@ -239,9 +225,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   Brugere
                 </NavLink>
               </li>
-              {/* <!-- Menu Item Tables --> */}
 
-              {/* <!-- Menu Item Settings --> */}
               <li>
                 <NavLink
                   to="/settings"
@@ -282,11 +266,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   Indstillinger
                 </NavLink>
               </li>
-              {/* <!-- Menu Item Settings --> */}
             </ul>
           </div>
         </nav>
-        {/* <!-- Sidebar Menu --> */}
       </div>
     </aside>
   );
