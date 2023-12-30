@@ -64,13 +64,10 @@ const Create = () => {
     axiosInstance
       .post('/bot/create', formData, { timeout: 0 })
       .then((response) => {
-        console.log(response.data);
         showToast('Success', 'Din chatbot er blevet oprettet!', 'success');
         navigate(`/chatbots/${response.data.data.id}`);
       })
       .catch((error) => {
-        console.log('Error creating bot:', error.response.data.message);
-
         showToast(
           'Fejl',
           `Der skete en fejl: ${error.response.data.message}`,

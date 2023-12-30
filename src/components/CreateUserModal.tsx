@@ -34,10 +34,8 @@ const CreateUserModal = ({ showModal, setShowModal }: Props) => {
     setIsLoading(true);
 
     try {
-      const response = await axiosInstance.post('/auth/sign-up', formData);
+      await axiosInstance.post('/auth/sign-up', formData);
 
-      // Handle the response (e.g., show success message, reset form, close modal, etc.)
-      console.log('User created!', response.data);
       setFormData({
         email: '',
         name: '',

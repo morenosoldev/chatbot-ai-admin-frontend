@@ -124,9 +124,7 @@ const Settings = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        console.log('Fetching user data', userId);
         const response = await instance.get(`/me`);
-        console.log('response', response.data.data);
         const fetchedUserData = response.data.data as UserData;
         setUserData(fetchedUserData);
         setAvatar(fetchedUserData.avatar || defaultAvatar);
@@ -150,8 +148,7 @@ const Settings = () => {
     }
 
     try {
-      const response = await instance.put(`/user/update`, userData);
-      console.log('response', response.data.data);
+      await instance.put(`/user/update`, userData);
       showToast('Success', 'Din bruger er blevet opdateret!', 'success');
     } catch (error) {
       console.error('Error updating user data:', error);

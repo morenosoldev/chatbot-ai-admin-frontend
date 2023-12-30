@@ -33,7 +33,6 @@ export const authSlice = createSlice({
       state.isLoggedIn = true;
       state.authToken = action.payload.authToken;
       state.user = action.payload.user;
-      console.log(action.payload.authToken);
       localStorage.setItem('authToken', action.payload.authToken);
     },
     logout: (state) => {

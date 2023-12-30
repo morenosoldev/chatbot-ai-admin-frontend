@@ -33,7 +33,6 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
     axiosInstance
       .get(`/bot/chatbot/${id}`)
       .then((response) => {
-        console.log('API Response:', response.data);
         setChatbot(response.data.data.chatbot);
       })
       .catch((error) => console.error('Error fetching data:', error));
@@ -166,7 +165,6 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
       );
 
       const data = response.data;
-      console.log('data.conversationId', data.conversationId);
       setConversationId(data.conversationId); // Store the retrieved conversation ID
       return data.conversationId; // Return the retrieved conversation ID
     } catch (error) {
@@ -216,8 +214,11 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
                       ? 'bg-gray-200 px-4 flex items-center py-2 text-left text-black'
                       : 'px-4 py-2 ml-auto text-white'
                   }`}
-                  data-testid={message.isBot ? `bot-message-${index}` : `user-message-${index}`}
-
+                  data-testid={
+                    message.isBot
+                      ? `bot-message-${index}`
+                      : `user-message-${index}`
+                  }
                 >
                   {message.message}
                   {loading &&
