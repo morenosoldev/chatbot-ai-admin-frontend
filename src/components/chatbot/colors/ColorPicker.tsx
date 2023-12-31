@@ -77,6 +77,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
           <div
             className="p-2 bg-white shadow pointer"
             onClick={handleOpenUserMessagePicker}
+            data-testid="userMessagePicker" // Added data-testid
           >
             <div
               className="w-full h-10"
@@ -87,6 +88,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
             <div className="absolute z-10">
               <div
                 className="fixed left-0 top-0 right-0 bottom-0"
+                data-testid="closeUserMessagePicker"
                 onClick={handleCloseUserMessagePicker}
               />
               <SketchPicker
@@ -94,6 +96,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
                 onChange={(color: any) => {
                   setUserMessageColor(color.hex);
                 }}
+                data-testid="userMessageColorPicker" // Added data-testid
               />
             </div>
           ) : null}
@@ -105,6 +108,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
           <div
             className="p-2 bg-white shadow pointer"
             onClick={handleOpenBotMessagePicker}
+            data-testid="botMessagePicker" // Added data-testid
           >
             <div
               className="w-full h-10"
@@ -115,6 +119,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
             <div className="absolute z-10">
               <div
                 className="fixed left-0 top-0 right-0 bottom-0"
+                data-testid="closeBotMessagePicker"
                 onClick={handleCloseBotMessagePicker}
               />
               <SketchPicker
@@ -122,6 +127,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
                 onChange={(color: any) => {
                   setBotMessageColor(color.hex);
                 }}
+                data-testid="botMessageColorPicker" // Added data-testid
               />
             </div>
           ) : null}
@@ -133,6 +139,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
           <div
             className="p-2 bg-white shadow pointer"
             onClick={handleOpenUserTextColorPicker}
+            data-testid="userTextColorPicker" // Added data-testid
           >
             <div
               className="w-full h-10"
@@ -143,6 +150,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
             <div className="absolute z-10">
               <div
                 className="fixed left-0 top-0 right-0 bottom-0"
+                data-testid="closeUserTextColorPicker"
                 onClick={handleCloseUserTextColorPicker}
               />
               <SketchPicker
@@ -150,6 +158,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
                 onChange={(color: any) => {
                   setUserTextColor(color.hex);
                 }}
+                data-testid="userTextColorColorPicker" // Added data-testid
               />
             </div>
           ) : null}
@@ -161,6 +170,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
           <div
             className="p-2 bg-white shadow pointer"
             onClick={handleOpenBotTextColorPicker}
+            data-testid="botTextColorPicker" // Added data-testid
           >
             <div
               className="w-full h-10"
@@ -171,6 +181,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
             <div className="absolute z-10">
               <div
                 className="fixed left-0 top-0 right-0 bottom-0"
+                data-testid="closeBotTextColorPicker"
                 onClick={handleCloseBotTextColorPicker}
               />
               <SketchPicker
@@ -178,6 +189,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
                 onChange={(color: any) => {
                   setBotTextColor(color.hex);
                 }}
+                data-testid="botTextColorColorPicker" // Added data-testid
               />
             </div>
           ) : null}

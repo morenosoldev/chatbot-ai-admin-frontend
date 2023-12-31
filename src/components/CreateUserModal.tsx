@@ -83,6 +83,7 @@ const CreateUserModal = ({ showModal, setShowModal }: Props) => {
               {/* Add other necessary input fields for user creation */}
               <button
                 type="submit"
+                data-testid="create-user-button"
                 className="bg-black text-white font-bold py-2 px-4 rounded"
                 disabled={isLoading}
               >

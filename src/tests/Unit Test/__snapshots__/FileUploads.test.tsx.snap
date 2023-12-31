@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FileUploads should render without errors 1`] = `
+<div>
+  <div>
+    <div
+      class="mb-4"
+    >
+      <h2
+        class="text-lg font-semibold"
+      >
+        File Upload
+      </h2>
+      <div
+        class="border-dashed border-2 border-gray-300 p-4"
+      >
+        <input />
+        <p>
+          Drag 'n' drop some files here, or click to select files
+        </p>
+      </div>
+    </div>
+    <div
+      class="mb-4"
+    />
+    <div
+      class="mb-4"
+    >
+      <h2
+        class="text-lg font-semibold"
+      >
+        URL
+      </h2>
+      <input
+        class="border border-gray-300 p-2 w-full mb-2"
+        placeholder="Enter a URL"
+        type="text"
+        value=""
+      />
+      <button
+        class="bg-black text-white p-2 mt-2 rounded-md hover-bg-blue-600"
+      >
+        Submit URL
+      </button>
+    </div>
+  </div>
+</div>
+`;

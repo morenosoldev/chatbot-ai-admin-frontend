@@ -18,6 +18,7 @@ interface Chatbot {
 
 const ChatbotTable: React.FC = () => {
   const [chatbots, setChatbots] = useState<Chatbot[]>([]);
+  const [error, setError] = useState<string>('');
 
   useEffect(() => {
     axiosInstance
@@ -25,7 +26,9 @@ const ChatbotTable: React.FC = () => {
       .then((response) => {
         setChatbots(response.data.data.chatbots);
       })
-      .catch((error) => console.error('Error fetching data:', error));
+      .catch(() => {
+        setError('Failed to fetch chatbots');
+      });
   }, []);
 
   return (
@@ -56,8 +59,15 @@ const ChatbotTable: React.FC = () => {
           </div>
         </div>
 
-        {/* Table rows */}
-        {chatbots.map((chatbot) => (
+        {error && (
+          <div
+            className="text-red-500 text-center py-4"
+            data-testid="error-message"
+          >
+            {error}
+          </div>
+        )}
+        {chatbots.map((chatbot, i) => (
           <div
             key={chatbot.id}
             className="grid grid-cols-3 border-b border-stroke dark:border-strokedark sm:grid-cols-4"
@@ -75,7 +85,12 @@ const ChatbotTable: React.FC = () => {
             </div>
 
             <div className="flex items-center justify-center p-2.5 xl:p-5">
-              <p className="text-black dark:text-white">{chatbot.id}</p>
+              <p
+                className="text-black dark:text-white"
+                data-testid={`chatbot-id-${i}`} // Use unique test ID
+              >
+                {chatbot.id}
+              </p>
             </div>
 
             <div className="flex items-center justify-center p-2.5 xl:p-5">
@@ -83,6 +98,7 @@ const ChatbotTable: React.FC = () => {
                 {chatbot.suggestedMessages.map((suggestedMessage, index) => (
                   <button
                     key={index}
+                    data-testid={`suggested-message-${i}-${index}`} // Use unique test ID
                     className="border rounded p-2 m-2 transition duration-300 hover:bg-blue hover:text-white"
                   >
                     {suggestedMessage}
@@ -92,7 +108,10 @@ const ChatbotTable: React.FC = () => {
             </div>
 
             <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
-              <Link to={`/chatbots/${chatbot._id}`}>
+              <Link
+                to={`/chatbots/${chatbot._id}`}
+                data-testid={`go-to-chatbot-${i}-${chatbot._id}`} // Use unique test ID
+              >
                 <button className="flex items-center justify-center px-3 py-1.5 text-sm font-medium text-white bg-black rounded-md hover:bg-blue-600">
                   <span>Gå til chatbot</span>
                 </button>

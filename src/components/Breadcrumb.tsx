@@ -14,7 +14,9 @@ const Breadcrumb = ({ pageName }: BreadcrumbProps) => {
           <li>
             <Link to="/">Dashboard /</Link>
           </li>
-          <li className="text-primary">{pageName}</li>
+          <li className="text-primary" data-testid="breadcrumb-text">
+            {pageName}
+          </li>
         </ol>
       </nav>
     </div>

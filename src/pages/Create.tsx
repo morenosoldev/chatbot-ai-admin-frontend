@@ -5,9 +5,8 @@ import ChatPreview from '../components/ChatPreview';
 import ColorPicker from '../components/chatbot/colors/ColorPicker';
 import ChatbotInfo from '../components/chatbot/info/ChatbotInfo';
 import FileUploads from '../components/chatbot/files/FileUploads';
-import useImageUploader from '../firebase/uploadImage.js';
-import instance from '../axios/instance.js';
-import axiosInstance from '../axios/instance.js';
+import useImageUploader from '../firebase/uploadImage.ts';
+import axiosInstance from '../axios/instance.ts';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
@@ -132,7 +131,7 @@ const Create = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await instance.get('/users');
+        const response = await axiosInstance.get('/users');
         if (response.data.data.length > 0) {
           setUsers(response.data.data); // Assuming the response contains an array of user objects
         } else {

@@ -12,6 +12,7 @@ const DarkModeSwitcher = () => {
       >
         <input
           type="checkbox"
+          aria-label="Dark Mode Switch" // Add this attribute
           onChange={() => {
             if (typeof setColorMode === 'function') {
               setColorMode(colorMode === 'light' ? 'dark' : 'light');

@@ -30,12 +30,16 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
   const [conversationId, setConversationId] = useState<string | null>();
 
   useEffect(() => {
-    axiosInstance
-      .get(`/bot/chatbot/${id}`)
-      .then((response) => {
+    const fetchData = async () => {
+      try {
+        const response = await axiosInstance.get(`/bot/chatbot/${id}`);
         setChatbot(response.data.data.chatbot);
-      })
-      .catch((error) => console.error('Error fetching data:', error));
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
   }, [id]);
 
   const sendMessage = async () => {

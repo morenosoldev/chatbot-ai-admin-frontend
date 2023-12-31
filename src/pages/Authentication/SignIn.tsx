@@ -196,7 +196,6 @@ const SignIn = () => {
               </span>
             </div>
           </div>
-
           <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
             <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
               <span className="mb-1.5 block font-medium">Admin</span>
@@ -237,7 +236,6 @@ const SignIn = () => {
                     </span>
                   </div>
                 </div>
-
                 <div className="mb-6">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
                     Password
@@ -283,10 +281,8 @@ const SignIn = () => {
                   >
                     Login
                     {isLoading && (
-                      // Show the loading spinner while the login request is being processed
                       <svg
                         aria-hidden="true"
-                        role="status"
                         className="inline w-4 h-4 me-3 ml-4 text-white animate-spin"
                         viewBox="0 0 100 101"
                         fill="none"

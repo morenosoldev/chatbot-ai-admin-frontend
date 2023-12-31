@@ -1,0 +1,81 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ChatPreview should render without errors 1`] = `
+<div>
+  <div
+    class="bg-white border"
+    id="chat-container"
+  >
+    <div
+      class="flex items-center justify-between rounded-t-lg  border-b  p-4 text-white"
+    >
+      <img
+        alt="Picture of the author"
+        height="125"
+        src="logo.png"
+        width="125"
+      />
+      <button
+        class="text-black hover:text-gray-400 focus:text-gray-400 focus:outline-none"
+        id="close-chat"
+      >
+        <svg
+          class="h-6 w-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M6 18L18 6M6 6l12 12"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+          />
+        </svg>
+      </button>
+    </div>
+    <div
+      class="h-80 overflow-y-auto p-4"
+      id="chatbox"
+    >
+      <div
+        class="mb-2"
+      >
+        <p
+          class="inline-block rounded-lg bg-gray-200 px-4 py-2 text-black"
+          style="background-color: rgb(0, 0, 0); color: rgb(0, 0, 0);"
+        >
+          Hello
+        </p>
+      </div>
+      <div
+        class="mb-2 text-right"
+      >
+        <p
+          class="inline-block rounded-lg px-4 py-2 text-white"
+          style="background-color: rgb(255, 255, 255); color: rgb(255, 255, 255);"
+        >
+          Hi
+        </p>
+      </div>
+    </div>
+    <div
+      class="flex border-t p-4"
+    >
+      <input
+        class="w-full rounded-l-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        id="user-input"
+        placeholder="Skriv en besked..."
+        type="text"
+      />
+      <button
+        class="rounded-r-md px-4 py-2 text-black transition duration-300 hover:bg-blue-600"
+        id="send-button"
+      >
+        Send
+      </button>
+    </div>
+  </div>
+</div>
+`;

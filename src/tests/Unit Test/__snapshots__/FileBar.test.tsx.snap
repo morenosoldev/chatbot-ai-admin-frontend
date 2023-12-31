@@ -1,0 +1,56 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FileBar should render without errors 1`] = `
+<div>
+  <div
+    class="w-full bg-black p-4 text-white"
+  >
+    <div
+      class="container mx-auto"
+    >
+      <h2
+        class="text-lg font-semibold mb-2 text-white"
+      >
+        Saved Files
+      </h2>
+      <div
+        class="flex flex-wrap"
+      >
+        <div
+          class="bg-blue-500 text-white p-2 m-2 rounded-md"
+        >
+          file1.txt
+           Type: 
+          text/plain
+        </div>
+        <div
+          class="bg-blue-500 text-white p-2 m-2 rounded-md"
+        >
+          file2.txt
+           Type: 
+          text/plain
+        </div>
+      </div>
+      <h2
+        class="text-lg font-semibold mb-2 mt-4 text-white"
+      >
+        Saved URLs
+      </h2>
+      <div
+        class="flex flex-wrap"
+      >
+        <div
+          class="bg-green-500 text-white p-2 m-2 rounded-md"
+        >
+          https://example.com
+        </div>
+        <div
+          class="bg-green-500 text-white p-2 m-2 rounded-md"
+        >
+          https://example.org
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -116,6 +116,7 @@ const ChatbotInfo: React.FC<ChatbotInfoProps> = ({
         <select
           className="border border-gray-300 p-2 w-full mb-2"
           value={userId}
+          data-testid="user-id-select"
           onChange={handleUserIdChange}
         >
           {users.map((user) => (
