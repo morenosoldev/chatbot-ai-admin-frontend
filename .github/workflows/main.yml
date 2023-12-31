@@ -50,7 +50,7 @@ jobs:
           start: npm run preview -- --host
           wait-on: 'http://localhost:4173'
           wait-on-timeout: 60
-          config-file: cypress.config.js
+          config-file: cypress.config.ts
           record: true
           parallel: true
         env:
