@@ -75,9 +75,8 @@ describe('Integration Testing for Sign In', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /login/i }));
 
-    // Wait for the token to be added to localStorage
     await waitFor(() => {
-      const authToken = localStorage.getItem('authToken');
+      const authToken = localStorage.getItem('authToken'); // Use the correct key
       expect(authToken).toBeTruthy();
     });
   });
