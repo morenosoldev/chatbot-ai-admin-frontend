@@ -28,14 +28,17 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [conversationId, setConversationId] = useState<string | null>();
+  const [error, setError] = useState<string | null>(null); // State to track error messages
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get(`/bot/chatbot/${id}`);
         setChatbot(response.data.data.chatbot);
+        setError(null); // Reset error state on successful fetch
       } catch (error) {
         console.error('Error fetching data:', error);
+        setError('Failed to load chatbot data'); // Set error message
       }
     };
 
@@ -57,18 +60,21 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
       currentMessages.push({ isBot: true, message: '' });
       setMessages(currentMessages);
 
-      const response = await fetch(`http://localhost:8000/bot/chat/${id}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${process.env.VITE_API_URL || 'http://localhost:8000'}/bot/chat/${id}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            input: userInput,
+            previousMessages: [...messages, userMessage],
+            company: 'Spacebox',
+            conversationId: currentConversationId,
+          }),
         },
-        body: JSON.stringify({
-          input: userInput,
-          previousMessages: [...messages, userMessage],
-          company: 'Spacebox',
-          conversationId: currentConversationId,
-        }),
-      });
+      );
 
       if (!response.ok || !response.body) {
         throw new Error(response.statusText);
@@ -115,18 +121,21 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
       currentMessages.push({ isBot: true, message: '' });
       setMessages(currentMessages);
 
-      const response = await fetch(`http://localhost:8000/bot/chat/${id}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${process.env.VITE_API_URL || 'http://localhost:8000'}/bot/chat/${id}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            input: suggestedMessage,
+            previousMessages: currentMessages, // Use currentMessages here
+            company: 'Spacebox',
+            conversationId: currentConversationId,
+          }),
         },
-        body: JSON.stringify({
-          input: suggestedMessage,
-          previousMessages: currentMessages, // Use currentMessages here
-          company: 'Spacebox',
-          conversationId: currentConversationId,
-        }),
-      });
+      );
 
       if (!response.ok || !response.body) {
         throw new Error(response.statusText);
@@ -186,6 +195,11 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
 
   return (
     <div>
+      {error && (
+        <div data-testid="error-message" className="error-message">
+          {error}
+        </div>
+      )}
       {chatbot && (
         <div id="chat-container" className="bg-white border">
           <div className="flex items-center border-b p-4">
@@ -228,7 +242,10 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
                   {loading &&
                     index === messages.length - 1 &&
                     messages[messages.length - 1].isBot && (
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900 ml-4"></div>
+                      <div
+                        data-testid="loading-indicator"
+                        className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900 ml-4"
+                      ></div>
                     )}
                 </p>
               </div>
