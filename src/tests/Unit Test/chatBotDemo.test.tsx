@@ -185,7 +185,9 @@ describe('ChatbotDemo', () => {
     // Assert that suggested message is sent (mock HTTP request and check the message is added to the chat)
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
-        'http://localhost:8000/bot/chat/chatbot-id',
+        `${
+          process.env.VITE_API_URL || 'http://localhost:8000'
+        }/bot/chat/chatbot-id`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
