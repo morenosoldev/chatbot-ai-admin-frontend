@@ -43,7 +43,6 @@ describe('Settings Component User Details', () => {
       expect(mockedGet).toHaveBeenCalledWith('/me');
     });
 
-    // Use toHaveValue for input fields
     expect(await findByTestId('user-name')).toHaveValue(mockUserData.name);
     expect(await findByTestId('user-email')).toHaveValue(mockUserData.email);
     expect(await findByTestId('user-phone')).toHaveValue(mockUserData.phone);

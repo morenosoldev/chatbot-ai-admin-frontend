@@ -19,7 +19,6 @@ describe('CreateUserModal', () => {
       <CreateUserModal showModal={true} setShowModal={setShowModal} />,
     );
 
-    // Fill out form fields
     fireEvent.change(screen.getByPlaceholderText('Name'), {
       target: { value: 'John Doe' },
     });
@@ -31,20 +30,16 @@ describe('CreateUserModal', () => {
     });
 
     await act(async () => {
-      // Mock a successful form submission
       (axiosInstance.post as jest.Mock).mockResolvedValueOnce({});
-      // Submit the form
       fireEvent.click(getByTestId('create-user-button'));
     });
 
-    // Assert that the form data was sent to the server
     expect(axiosInstance.post).toHaveBeenCalledWith('/auth/sign-up', {
       name: 'John Doe',
       email: 'john@example.com',
       password: 'password123',
     });
 
-    // Assert that setShowModal was called to close the modal
     expect(setShowModal).toHaveBeenCalledWith(false);
   });
 });

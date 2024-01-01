@@ -12,25 +12,25 @@ describe('DarkModeSwitcher Component', () => {
     const switchInput = getByLabelText('Dark Mode Switch') as HTMLInputElement;
 
     expect(switchInput).toBeInTheDocument();
-    expect(switchInput.checked).toBe(false); // Light mode is checked
+    expect(switchInput.checked).toBe(false);
   });
 
   it('should toggle to dark mode when clicked', () => {
     const { getByLabelText } = render(<DarkModeSwitcher />);
     const switchInput = getByLabelText('Dark Mode Switch') as HTMLInputElement;
 
-    fireEvent.click(switchInput); // Simulate clicking the switch
+    fireEvent.click(switchInput);
 
-    expect(switchInput.checked).toBe(true); // Dark mode should be checked
+    expect(switchInput.checked).toBe(true);
   });
 
   it('should toggle back to light mode when clicked again', () => {
     const { getByLabelText } = render(<DarkModeSwitcher />);
     const switchInput = getByLabelText('Dark Mode Switch') as HTMLInputElement;
 
-    fireEvent.click(switchInput); // Simulate clicking to dark mode
-    fireEvent.click(switchInput); // Simulate clicking back to light mode
+    fireEvent.click(switchInput);
+    fireEvent.click(switchInput);
 
-    expect(switchInput.checked).toBe(false); // Light mode should be checked
+    expect(switchInput.checked).toBe(false);
   });
 });

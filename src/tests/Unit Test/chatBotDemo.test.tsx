@@ -18,14 +18,13 @@ const mockedPost = axiosInstance.post as jest.Mock;
 beforeEach(() => {
   global.fetch = jest.fn(
     () =>
-      new Promise(
-        (resolve) =>
-          setTimeout(() => {
-            resolve({
-              ok: true,
-              json: () => Promise.resolve({ data: null }),
-            });
-          }, 1000), // Delay response by 1 second
+      new Promise((resolve) =>
+        setTimeout(() => {
+          resolve({
+            ok: true,
+            json: () => Promise.resolve({ data: null }),
+          });
+        }, 1000),
       ),
   ) as jest.Mock;
 });
@@ -60,7 +59,6 @@ describe('ChatbotDemo', () => {
 
     await waitFor(() => {
       expect(mockedGet).toHaveBeenCalledWith('/bot/chatbot/chatbot-id');
-      // You can add more assertions here to check if the component renders correctly
     });
   });
 
@@ -89,12 +87,10 @@ describe('ChatbotDemo', () => {
 
     await waitFor(() => {
       expect(mockedGet).toHaveBeenCalledWith('/bot/chatbot/chatbot-id');
-      // You can add more assertions here to check if the component renders correctly
     });
   });
 
   test('displays loading indicator when a message is being sent', async () => {
-    // Mock data and axios response for the initial load
     const mockChatbotData = {
       _id: 'mock-chatbot-id',
       logo: 'mock-logo-url',
@@ -132,7 +128,7 @@ describe('ChatbotDemo', () => {
 
     expect(await screen.findByTestId('loading-indicator')).toBeInTheDocument();
 
-    jest.advanceTimersByTime(1000); // Example: 1 second
+    jest.advanceTimersByTime(1000);
 
     await waitFor(() => {
       expect(screen.queryByTestId('loading-indicator')).not.toBeInTheDocument();
@@ -142,7 +138,6 @@ describe('ChatbotDemo', () => {
   });
 
   test('handles click on suggested message', async () => {
-    // Mock data and axios response for the initial load and suggested messages
     const mockChatbotData = {
       _id: 'mock-chatbot-id',
       logo: 'mock-logo-url',
@@ -163,11 +158,8 @@ describe('ChatbotDemo', () => {
       data: { data: { chatbot: mockChatbotData } },
     });
 
-    // Mock response for sending a suggested message
     mockedPost.mockResolvedValueOnce({
-      data: {
-        /* ... response data ... */
-      },
+      data: {},
     });
 
     render(
@@ -178,11 +170,9 @@ describe('ChatbotDemo', () => {
       </Provider>,
     );
 
-    screen.debug(); // Add this line to debug
     const suggestedMessageButton = await screen.findByText('Hello');
     fireEvent.click(suggestedMessageButton);
 
-    // Assert that suggested message is sent (mock HTTP request and check the message is added to the chat)
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
         `${
@@ -205,7 +195,6 @@ describe('ChatbotDemo', () => {
   });
 
   test('fetches data on mount and handles error', async () => {
-    // Mock HTTP request to return an error
     mockedGet.mockRejectedValueOnce(new Error('Network Error'));
 
     const { getByTestId } = render(
@@ -216,7 +205,6 @@ describe('ChatbotDemo', () => {
       </Provider>,
     );
 
-    // Assert that error state is handled (e.g., showing an error message)
     await waitFor(() => {
       expect(getByTestId('error-message')).toBeInTheDocument();
     });

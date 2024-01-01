@@ -62,7 +62,6 @@ describe('ChatbotInfo', () => {
       />,
     );
 
-    // Test interacting with the component
     const nameInput = getByPlaceholderText('Chatbot navn');
     fireEvent.change(nameInput, { target: { value: 'New Name' } });
     expect(setName).toHaveBeenCalledWith('New Name');

@@ -25,7 +25,6 @@ describe('UserTable', () => {
 
     render(<UserTable />);
 
-    // Wait for the users to be displayed
     await waitFor(() => {
       users.forEach((user) => {
         expect(screen.getByText(user._id)).toBeInTheDocument();

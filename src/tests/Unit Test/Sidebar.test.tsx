@@ -15,7 +15,6 @@ describe('Sidebar Component', () => {
       </Provider>,
     );
 
-    // Test if the component renders correctly
     const dashboardLink = getByText('Dashboard');
     const chatbotsLink = getByText('Chatbots');
     const createLink = getByText('Opret chatbot');

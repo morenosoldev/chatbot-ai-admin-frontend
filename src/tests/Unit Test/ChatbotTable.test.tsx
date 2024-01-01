@@ -13,7 +13,6 @@ jest.mock('../../axios/instance', () => ({
 
 describe('ChatbotTable', () => {
   test('displays chatbots when the API call succeeds', async () => {
-    // Mock a successful API response with sample chatbot data
     const chatbots = [
       {
         _id: '1',
@@ -40,13 +39,10 @@ describe('ChatbotTable', () => {
       </Provider>,
     );
 
-    // Wait for the users to be displayed
     await waitFor(() => {
       chatbots.forEach((chatbot, i) => {
-        // Check for chatbot data
         expect(screen.getByText(chatbot.id)).toBeInTheDocument();
 
-        // Check for suggested messages
         chatbot.suggestedMessages.forEach((message, index) => {
           expect(screen.getByText(message)).toBeInTheDocument();
           expect(
@@ -54,10 +50,8 @@ describe('ChatbotTable', () => {
           ).toBeInTheDocument();
         });
 
-        // Check for chatbot logo
         expect(screen.getByAltText('Intet logo')).toBeInTheDocument();
 
-        // Check for link to chatbot
         const link = screen.getByTestId(`go-to-chatbot-${i}-${chatbot._id}`);
         expect(link).toBeInTheDocument();
         expect(link).toHaveAttribute('href', `/chatbots/${chatbot._id}`);

@@ -55,9 +55,8 @@ describe('DropdownUser Component', () => {
     const settingsLink = screen.getByTestId('settings-link');
     expect(settingsLink).toBeInTheDocument();
 
-    fireEvent.click(document.body); // Simulate a click outside the component
+    fireEvent.click(document.body);
 
-    // Check if the dropdown is closed by checking for the "hidden" class
     const dropdown = screen.getByTestId('dropdown-menu');
     expect(dropdown).toHaveClass('hidden');
   });
@@ -66,16 +65,12 @@ describe('DropdownUser Component', () => {
     const dropdownButton = screen.getByTestId('dropdown-button');
     const dropdownMenu = screen.getByTestId('dropdown-menu');
 
-    // Open the dropdown
     fireEvent.click(dropdownButton);
 
-    // Assert that the dropdown is open
     expect(dropdownMenu).toBeInTheDocument();
 
-    // Simulate the Escape key press
     fireEvent.keyDown(document, { key: 'Escape', code: 'Escape', keyCode: 27 });
 
-    // Check if the dropdown is closed by checking for the "hidden" class
     const dropdown = screen.getByTestId('dropdown-menu');
     expect(dropdown).toHaveClass('hidden');
   });

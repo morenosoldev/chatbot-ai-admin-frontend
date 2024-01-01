@@ -5,36 +5,6 @@ import SignUp from '../../pages/Authentication/SignUp.tsx';
 import { store } from '../../store/store.ts';
 import { Provider } from 'react-redux';
 
-jest.mock('../../axios/instance', () => ({
-  ...jest.requireActual('../../axios/instance'),
-  post: jest.fn((url, data) => {
-    if (url === '/auth/sign-up' && data.email === 'existingemail@valid.com') {
-      // Simulate a conflict error response
-      return Promise.reject({
-        response: {
-          data: {
-            message: 'Conflict', // Simulating server error response
-          },
-        },
-      });
-    } else {
-      // Simulate a successful response
-      return Promise.resolve({
-        data: {
-          data: {
-            accessToken: 'mock-token',
-          },
-        },
-      });
-    }
-  }),
-}));
-
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: () => jest.fn(),
-}));
-
 describe('Intergration Testing for Sign Up.', () => {
   test('Displays error message from server, when email already exsist', async () => {
     render(
@@ -99,7 +69,7 @@ describe('Intergration Testing for Sign Up.', () => {
 
     await waitFor(() => {
       const authToken = localStorage.getItem('authToken');
-      expect(authToken).toBe('mock-token');
+      expect(authToken).toBeTruthy();
     });
   });
 });

@@ -13,7 +13,6 @@ describe('Breadcrumb Component', () => {
       </BrowserRouter>,
     );
 
-    // Check if the page name is rendered
     expect(getByTestId('breadcrumb-text')).toBeInTheDocument();
 
     expect(getByTestId('breadcrumb-text')).toHaveTextContent(pageName);
