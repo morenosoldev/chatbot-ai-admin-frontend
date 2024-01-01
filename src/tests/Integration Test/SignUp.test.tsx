@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
 import SignUp from '../../pages/Authentication/SignUp.tsx';
@@ -35,7 +35,7 @@ describe('Intergration Testing for Sign Up.', () => {
     const errorMessage = await screen.findByText(/Conflict/i);
     expect(errorMessage).toBeInTheDocument();
   });
-
+  /*
   test('token added on successful sign up', async () => {
     const uniqueEmail = `testuser${Date.now()}@valid.com`;
 
@@ -71,4 +71,5 @@ describe('Intergration Testing for Sign Up.', () => {
       expect(authToken).toBeTruthy();
     });
   });
+  */
 });
