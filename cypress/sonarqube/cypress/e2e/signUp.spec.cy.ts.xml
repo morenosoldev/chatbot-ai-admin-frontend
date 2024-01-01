@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<testExecutions version="1">
-  <file path="cypress/e2e/signUp.spec.cy.ts">
-    <testCase name="SignUp End-to-End Tests - Displays error message for existing email" duration="1203"/>
-    <testCase name="SignUp End-to-End Tests - Displays error message when fields are empty" duration="130"/>
-    <testCase name="SignUp End-to-End Tests - Displays error message when passwords do not match" duration="1113"/>
-    <testCase name="SignUp End-to-End Tests - Token is added on successful sign up" duration="1419"/>
-  </file>
-</testExecutions>

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<testExecutions version="1">
-  <file path="cypress/e2e/chatbot_creation_spec.cy.js">
-    <testCase name="Chatbot Creation - Creates a new chatbot" duration="4332"/>
-    <testCase name="Chatbot Creation - Creates a new chatbot with illegal name" duration="3825"/>
-  </file>
-</testExecutions>

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<testExecutions version="1">
-  <file path="cypress/e2e/signIn.spec.cy.ts">
-    <testCase name="Sign In Page Tests - should display an error for empty fields" duration="201"/>
-    <testCase name="Sign In Page Tests - should display an error for incorrect credentials" duration="778"/>
-    <testCase name="Sign In Page Tests - should successfully log in with correct credentials" duration="719"/>
-  </file>
-</testExecutions>

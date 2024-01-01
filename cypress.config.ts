@@ -2,10 +2,6 @@ import { defineConfig } from 'cypress';
 import pluginConfig from './cypress/plugins';
 
 export default defineConfig({
-  reporter: 'cypress-sonarqube-reporter',
-  reporterOptions: {
-    outputDir: 'cypress/sonarqube',
-  },
   projectId: 'qiozua',
   viewportWidth: 1280,
   viewportHeight: 720,

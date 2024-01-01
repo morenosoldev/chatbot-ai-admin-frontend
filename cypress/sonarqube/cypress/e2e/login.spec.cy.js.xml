@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<testExecutions version="1">
-  <file path="cypress/e2e/login.spec.cy.js">
-    <testCase name="Login Test - successfully logs in" duration="880"/>
-  </file>
-</testExecutions>
