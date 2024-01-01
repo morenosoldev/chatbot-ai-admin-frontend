@@ -64,7 +64,9 @@ describe('Chatbot Creation', () => {
     cy.contains('https://example.com').should('be.visible');
 
     cy.contains('button', 'Opret').click();
-    cy.url().should('include', '/chatbots');
+    cy.get('.toast') // Replace with the actual selector for your toast
+      .should('be.visible')
+      .and('contain', 'Din chatbot er blevet oprettet!'); // Replace with the actual message
   });
 
   it('Creates a new chatbot with illegal name', () => {

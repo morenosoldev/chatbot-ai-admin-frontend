@@ -151,7 +151,7 @@ const Create = () => {
     type: 'success' | 'error',
   ) => {
     toast[type](
-      <div>
+      <div className="toast">
         <strong>{title}</strong>
         <p>{message}</p>
       </div>,
