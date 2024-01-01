@@ -48,6 +48,7 @@ describe('Integration Testing for Sign In', () => {
 
     await waitFor(() => {
       const authToken = localStorage.getItem('authToken');
+      console.log('authToken', authToken);
       expect(authToken).toBeTruthy();
     });
   });
