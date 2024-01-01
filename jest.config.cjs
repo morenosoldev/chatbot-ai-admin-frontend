@@ -11,6 +11,10 @@ module.exports = {
     '**/*.{js,jsx,ts,tsx}',
     '!**/node_modules/**',
     '!**/vendor/**',
+    '!**/*.config.{js,ts}', // Exclude all config files
+    '!**/dist/**', // Exclude the dist directory
+    '!**/coverage/**', // Exclude the coverage directory
+    '!**/*d.ts', // Exclude TypeScript declaration files
   ],
   coverageDirectory: './coverage',
   coveragePathIgnorePatterns: [
