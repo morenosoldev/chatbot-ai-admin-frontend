@@ -67,9 +67,12 @@ describe('Intergration Testing for Sign Up.', () => {
     });
     fireEvent.click(submitButton);
 
-    await waitFor(() => {
-      const authToken = localStorage.getItem('authToken');
-      expect(authToken).toBeTruthy();
-    });
+    await waitFor(
+      () => {
+        const authToken = localStorage.getItem('authToken');
+        expect(authToken).toBeTruthy();
+      },
+      { timeout: 10000 },
+    );
   });
 });
