@@ -1,9 +1,39 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
 import SignUp from '../../pages/Authentication/SignUp.tsx';
 import { store } from '../../store/store.ts';
 import { Provider } from 'react-redux';
+
+jest.mock('../../axios/instance', () => ({
+  ...jest.requireActual('../../axios/instance'),
+  post: jest.fn((url, data) => {
+    if (url === '/auth/sign-up' && data.email === 'existingemail@valid.com') {
+      // Simulate a conflict error response
+      return Promise.reject({
+        response: {
+          data: {
+            message: 'Conflict', // Simulating server error response
+          },
+        },
+      });
+    } else {
+      // Simulate a successful response
+      return Promise.resolve({
+        data: {
+          data: {
+            accessToken: 'mock-token',
+          },
+        },
+      });
+    }
+  }),
+}));
+
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => jest.fn(),
+}));
 
 describe('Intergration Testing for Sign Up.', () => {
   test('Displays error message from server, when email already exsist', async () => {
@@ -19,7 +49,7 @@ describe('Intergration Testing for Sign Up.', () => {
       target: { value: 'John Doe' },
     });
     fireEvent.change(screen.getByPlaceholderText(/Enter your email/i), {
-      target: { value: 'valid@valid.com' },
+      target: { value: 'existingemail@valid.com' },
     });
     fireEvent.change(screen.getByTestId('password-input'), {
       target: { value: 'password' },
@@ -32,10 +62,11 @@ describe('Intergration Testing for Sign Up.', () => {
     });
     fireEvent.click(submitButton);
 
-    const errorMessage = await screen.findByText(/Conflict/i);
+    const errorMessage = await screen.findByTestId('error-message');
     expect(errorMessage).toBeInTheDocument();
+    expect(errorMessage).toHaveTextContent(/Conflict/i); // Check the error message text
   });
-  /*
+
   test('token added on successful sign up', async () => {
     const uniqueEmail = `testuser${Date.now()}@valid.com`;
 
@@ -68,8 +99,7 @@ describe('Intergration Testing for Sign Up.', () => {
 
     await waitFor(() => {
       const authToken = localStorage.getItem('authToken');
-      expect(authToken).toBeTruthy();
+      expect(authToken).toBe('mock-token');
     });
   });
-  */
 });

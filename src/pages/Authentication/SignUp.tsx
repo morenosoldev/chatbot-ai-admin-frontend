@@ -338,7 +338,11 @@ const SignUp = () => {
                       </g>
                     </svg>
                   </span>
-                  {error && <div className="text-red">{error}</div>}
+                  {error && (
+                    <div className="text-red" data-testid="error-message">
+                      {error}
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="mb-5">
