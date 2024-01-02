@@ -21,7 +21,7 @@ const SignIn = () => {
     setLoading(true);
 
     if (!email || !password) {
-      setError('Felterne må ikke være tomme.');
+      setError('blab bla bla');
       setLoading(false);
       return;
     }
