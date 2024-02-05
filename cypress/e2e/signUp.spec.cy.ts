@@ -19,7 +19,7 @@ describe('SignUp End-to-End Tests', () => {
 
   it('Displays error message when passwords do not match', () => {
     cy.get('input[placeholder="Enter your full name"]').type('John Doe');
-    cy.get('input[type="email"]').type('valid@valid.com');
+    cy.get('input[type="email"]').type('valid3333@valid.com');
     cy.get('input[data-testid="password-input"]').type('password');
     cy.get('input[data-testid="confirm-password-input"]').type('different');
     cy.get('button').contains('Create account').click();
