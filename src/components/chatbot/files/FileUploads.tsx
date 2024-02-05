@@ -6,6 +6,7 @@ interface FileUploadsProps {
   selectedFiles: File[];
   handleSaveFile: () => void;
   url: string;
+  scrapeAllUrls: () => void;
   setUrl: (value: string) => void;
   handleUrlSubmit: () => void;
 }
@@ -17,6 +18,7 @@ const FileUploads: React.FC<FileUploadsProps> = ({
   handleSaveFile,
   url,
   setUrl,
+  scrapeAllUrls,
   handleUrlSubmit,
 }: FileUploadsProps): ReactElement => {
   return (
@@ -43,6 +45,22 @@ const FileUploads: React.FC<FileUploadsProps> = ({
             Save File
           </button>
         )}
+      </div>
+      <div className="mb-4">
+        <h2 className="text-lg font-semibold">URL</h2>
+        <input
+          type="text"
+          placeholder="Enter a base URL"
+          className="border border-gray-300 p-2 w-full mb-2"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+        />
+        <button
+          onClick={scrapeAllUrls}
+          className="bg-black text-white p-2 mt-2 rounded-md hover-bg-blue-600"
+        >
+          Scrape all URLs
+        </button>
       </div>
       <div className="mb-4">
         <h2 className="text-lg font-semibold">URL</h2>

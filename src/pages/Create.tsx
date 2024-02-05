@@ -128,6 +128,24 @@ const Create = () => {
     setLogo(downloadUrl);
   };
 
+  const scrapeAllUrls = async () => {
+    try {
+      const response = await axiosInstance.get('/scraping', {
+        params: { url: url, maxDepth: 1 },
+      });
+
+      const scrapedUrls = response.data.urls;
+      setSavedUrls([...savedUrls, ...scrapedUrls]);
+    } catch (error) {
+      console.error('Error scraping URLs:', error);
+    }
+  };
+
+  const removeUrl = (url: string) => {
+    const newUrls = savedUrls.filter((savedUrl) => savedUrl !== url);
+    setSavedUrls(newUrls);
+  };
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -213,6 +231,7 @@ const Create = () => {
             getRootProps={getRootProps}
             getInputProps={getInputProps}
             selectedFiles={selectedFiles}
+            scrapeAllUrls={scrapeAllUrls}
             handleSaveFile={handleSaveFile}
             url={url}
             setUrl={setUrl}
@@ -221,6 +240,7 @@ const Create = () => {
           <FileBar
             savedFiles={savedFiles}
             savedUrls={savedUrls}
+            removeUrl={removeUrl}
             name={name}
             message={message}
             userId={userId}

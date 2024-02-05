@@ -9,11 +9,13 @@ interface Message {
 interface Chatbot {
   _id: string;
   logo?: string;
+  name: string;
   chatbotai?: string;
   messages: Message[];
   userMessageColor: string;
   userTextColor: string;
   suggestedMessages: string[];
+  prompt: string;
   botMessageColor: string;
   botTextColor: string;
 }
@@ -35,10 +37,10 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
       try {
         const response = await axiosInstance.get(`/bot/chatbot/${id}`);
         setChatbot(response.data.data.chatbot);
-        setError(null); // Reset error state on successful fetch
+        setError(null);
       } catch (error) {
         console.error('Error fetching data:', error);
-        setError('Failed to load chatbot data'); // Set error message
+        setError('Failed to load chatbot data');
       }
     };
 
@@ -70,7 +72,8 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
           body: JSON.stringify({
             input: userInput,
             previousMessages: [...messages, userMessage],
-            company: 'Spacebox',
+            company: chatbot.name,
+            prompt: chatbot.prompt,
             conversationId: currentConversationId,
           }),
         },
@@ -131,7 +134,8 @@ const ChatbotDemo: React.FC<ChatbotDemoProps> = ({ id }: ChatbotDemoProps) => {
           body: JSON.stringify({
             input: suggestedMessage,
             previousMessages: currentMessages, // Use currentMessages here
-            company: 'Spacebox',
+            company: chatbot.name,
+            prompt: chatbot.prompt,
             conversationId: currentConversationId,
           }),
         },
