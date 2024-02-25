@@ -16,6 +16,8 @@ interface ChatbotInfoProps {
   setUserId: (value: string) => void;
   logo: String | null;
   setLogo: (file: File) => void;
+  icon: String | null;
+  setIcon: (file: File) => void;
   suggestedMessages: string[];
   setSuggestedMessages: (value: string[]) => void;
   getRootProps: () => Record<string, any>;
@@ -34,6 +36,8 @@ const ChatbotInfo: React.FC<ChatbotInfoProps> = ({
   setSuggestedMessages,
   logo,
   setLogo,
+  icon,
+  setIcon,
   users,
 }: ChatbotInfoProps): ReactElement => {
   const [inputValue, setInputValue] = useState('');
@@ -63,6 +67,12 @@ const ChatbotInfo: React.FC<ChatbotInfoProps> = ({
   const handleLogoChange = (e: ChangeEvent<HTMLInputElement>): void => {
     if (e.target.files && e.target.files[0]) {
       setLogo(e.target.files[0]);
+    }
+  };
+
+  const handleIconChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    if (e.target.files && e.target.files[0]) {
+      setIcon(e.target.files[0]);
     }
   };
 
@@ -130,6 +140,12 @@ const ChatbotInfo: React.FC<ChatbotInfoProps> = ({
         <h2 className="text-lg font-semibold mb-2">Logo</h2>
         <input type="file" onChange={handleLogoChange} />
         {logo && <p>{logo}</p>}
+      </div>
+
+      <div className="mb-4">
+        <h2 className="text-lg font-semibold mb-2">Ikon</h2>
+        <input type="file" onChange={handleIconChange} />
+        {icon && <p>{icon}</p>}
       </div>
     </div>
   );

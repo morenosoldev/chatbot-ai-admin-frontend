@@ -27,6 +27,7 @@ const Create = () => {
   const [message, setMessage] = useState('');
   const [userId, setUserId] = useState<string>('');
   const [logo, setLogo] = useState<string | null>(null);
+  const [icon, setIcon] = useState<string | null>(null);
   const [showUserMessagePicker, setShowUserMessagePicker] =
     useState<any>(false);
   const [userMessageColor, setUserMessageColor] = useState<any>('#ABB8C3');
@@ -55,6 +56,7 @@ const Create = () => {
     formData.append('rateLimiting', '0');
     formData.append('suggestedMessages', JSON.stringify(suggestedMessages));
     formData.append('logo', logo || '');
+    formData.append('icon', icon || '');
     formData.append('userMessageColor', userMessageColor);
     formData.append('botMessageColor', botMessageColor);
     formData.append('botTextColor', botTextColor);
@@ -128,6 +130,11 @@ const Create = () => {
     setLogo(downloadUrl);
   };
 
+  const handleIconChange = async (file: File) => {
+    const downloadUrl = await uploadFile(file);
+    setIcon(downloadUrl);
+  };
+
   const scrapeAllUrls = async () => {
     try {
       const response = await axiosInstance.get('/scraping', {
@@ -184,6 +191,8 @@ const Create = () => {
           setName={setName}
           logo={logo}
           setLogo={handleLogoChange}
+          icon={icon}
+          setIcon={handleIconChange}
           message={message}
           setMessage={setMessage}
           userId={userId}
